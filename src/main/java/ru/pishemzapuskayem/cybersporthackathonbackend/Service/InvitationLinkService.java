@@ -6,7 +6,6 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.InvitationLink;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.InvitationLinkRepository;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.RoleRepository;
 
 import java.time.LocalDate;
 import java.util.Optional;
@@ -18,15 +17,11 @@ import java.util.UUID;
 public class InvitationLinkService {
 
     private final InvitationLinkRepository repository;
-    private final RoleRepository roleRepository;
+    private final RoleService roleService;
 
+    @Transactional
     public InvitationLink createInvitationLink(String roleName, LocalDate expiryDate) {
-        Role role = roleRepository.findByName(roleName)
-                .orElseGet(() -> {
-                    Role newRole = new Role();
-                    newRole.setName(roleName);
-                    return roleRepository.save(newRole);
-                });
+        Role role = roleService.findOrCreateByName(roleName);
 
         InvitationLink link = new InvitationLink();
         link.setToken(UUID.randomUUID().toString());
@@ -37,6 +32,7 @@ public class InvitationLinkService {
         return repository.save(link);
     }
 
+    @Transactional
     public boolean useLink(String token) {
         Optional<InvitationLink> linkOpt = repository.findByToken(token);
         if (linkOpt.isPresent()) {
