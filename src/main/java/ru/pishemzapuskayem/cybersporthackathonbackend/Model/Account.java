@@ -27,8 +27,6 @@ public class Account extends AbstractEntity {
     @Column
     private String contact;
     @Column
-    private String avatar;
-    @Column
     private String password;
     @Column
     private String email;
