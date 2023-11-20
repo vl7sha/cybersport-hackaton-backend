@@ -20,3 +20,7 @@ jwt:
 admin:
   username: "admin"
   password: "1234"
+
+urls:
+  frontend:
+    registration-page: "http://localhost:4200/registration"
