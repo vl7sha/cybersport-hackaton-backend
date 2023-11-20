@@ -34,7 +34,7 @@ public class InvitationLinkController {
         );
     }
 
-    @PostMapping("/create")
+    @PostMapping("/create-list")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CreateInvitationLinksResponse> createInvitationLinks(
             @RequestBody CreateInvitationLinksRequest request

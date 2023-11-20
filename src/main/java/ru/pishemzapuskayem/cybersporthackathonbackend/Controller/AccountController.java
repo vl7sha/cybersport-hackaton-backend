@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.RequestCreateAccountDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.AccountMapper;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Security.jwt.JwtUtil;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.AccountService;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.InvitationLinkService;
@@ -33,8 +34,8 @@ public class AccountController {
     public ResponseEntity<Void> register(@RequestParam String token,
                                          @RequestBody RequestCreateAccountDTO requestCreateAccountDTO
     ) {
-        invitationLinkService.useLink(token);
-        accountService.create(accountMapper.map(requestCreateAccountDTO));
+        Role role = invitationLinkService.useLink(token);
+        accountService.create(accountMapper.map(requestCreateAccountDTO), role);
         return ResponseEntity.ok().build();
     }
 

@@ -14,6 +14,7 @@ import java.util.Optional;
 public class RoleService {
     private final RoleRepository repository;
 
+    @Transactional
     public Role findOrCreateByName(String roleName) {
         Optional<Role> roleOpt = repository.findByName(roleName);
         return roleOpt.orElseGet(() -> createRole(roleName));

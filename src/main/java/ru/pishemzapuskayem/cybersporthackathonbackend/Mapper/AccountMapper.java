@@ -12,7 +12,6 @@ public class AccountMapper {
     private final ModelMapper modelMapper;
 
     public Account map(RequestCreateAccountDTO requestCreateAccountDTO) {
-        Account account = modelMapper.map(requestCreateAccountDTO, Account.class);
-        return account;
+        return modelMapper.map(requestCreateAccountDTO, Account.class);
     }
 }
