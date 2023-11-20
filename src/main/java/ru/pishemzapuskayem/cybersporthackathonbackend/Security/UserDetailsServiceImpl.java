@@ -1,5 +1,6 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Security;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -10,14 +11,11 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.AccountReposito
 
 import java.util.Optional;
 
+@RequiredArgsConstructor
 @Service
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final AccountRepository accountRepository;
-
-    public UserDetailsServiceImpl(AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
-    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {

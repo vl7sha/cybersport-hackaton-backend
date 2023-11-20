@@ -1,35 +1,34 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Service;
 
-import org.springframework.security.core.context.SecurityContextHolder;
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.AccountRepository;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Security.UserDetailsImpl;
 
 @Service
+@RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class AccountService {
 
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleService roleService;
 
-    public AccountService(AccountRepository accountRepository, PasswordEncoder passwordEncoder) {
-        this.accountRepository = accountRepository;
-        this.passwordEncoder = passwordEncoder;
-    }
 
-    public Account getAuthenticated() {
-        UserDetailsImpl userDetails = (UserDetailsImpl) SecurityContextHolder.getContext()
-                .getAuthentication().getPrincipal();
-        return userDetails.getAccount();
+    @Transactional
+    public void create(Account account, String roleName) {
+        account.setRole(roleService.findOrCreateByName(roleName));
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
+        accountRepository.save(account);
     }
 
     @Transactional
-    public void create(Account account) {
+    public void create(Account account, Role role) {
+        account.setRole(role);
         account.setPassword(passwordEncoder.encode(account.getPassword()));
-
         accountRepository.save(account);
     }
 }

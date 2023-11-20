@@ -67,7 +67,7 @@ public class InvitationLinkService {
     }
 
     @Transactional
-    public void useLink(String token) {
+    public Role useLink(String token) {
         Optional<InvitationLink> linkOpt = repository.findByToken(token);
 
         if (linkOpt.isEmpty() || !isUsable(linkOpt.get())) {
@@ -77,6 +77,8 @@ public class InvitationLinkService {
         InvitationLink link = linkOpt.get();
         link.setUsed(true);
         repository.save(link);
+
+        return link.getRole();
     }
 
     public boolean validateLink(String token) {
