@@ -9,7 +9,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Security.UserDetailsServiceImpl;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.AccountService;
 
@@ -33,9 +32,6 @@ public class AdminInitializer implements CommandLineRunner {
             UserDetails admin = userDetailsService.loadUserByUsername(username);
             logger.info("Admin " + admin.getUsername() + " already created, skipping");
         } catch (UsernameNotFoundException e) {
-            Role role = new Role();
-            role.setName("ROLE_ADMIN");
-
             Account admin = new Account(
                     username,
                     "admin",
@@ -46,7 +42,7 @@ public class AdminInitializer implements CommandLineRunner {
                     null,
                     "admin",
                     "admin",
-                    role
+                    "ROLE_ADMIN"
             );
 
             service.create(admin);
