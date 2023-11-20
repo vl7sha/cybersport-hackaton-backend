@@ -20,7 +20,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        Optional<Account> accountOpt = accountRepository.findAccountByName(username);
+        Optional<Account> accountOpt = accountRepository.findAccountByEmail(username);
 
         if (accountOpt.isEmpty()) {
             throw new UsernameNotFoundException("No find username");
