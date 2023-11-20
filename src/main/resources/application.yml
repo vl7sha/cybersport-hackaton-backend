@@ -16,3 +16,7 @@ jwt:
   issuer: cybersport
   secret: J7gzxczxcQgfJ7gQgfczxc
   tokenExpiresIn: 432000
+
+admin:
+  username: "admin"
+  password: "1234"
