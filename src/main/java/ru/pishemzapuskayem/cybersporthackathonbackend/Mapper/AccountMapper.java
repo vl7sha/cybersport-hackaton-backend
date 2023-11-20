@@ -3,7 +3,7 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.RequestCreateAccountDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateAccountRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
 
 @Component
@@ -11,7 +11,7 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
 public class AccountMapper {
     private final ModelMapper modelMapper;
 
-    public Account map(RequestCreateAccountDTO requestCreateAccountDTO) {
-        return modelMapper.map(requestCreateAccountDTO, Account.class);
+    public Account map(CreateAccountRequest createAccountRequest) {
+        return modelMapper.map(createAccountRequest, Account.class);
     }
 }

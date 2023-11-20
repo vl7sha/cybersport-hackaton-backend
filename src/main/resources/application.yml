@@ -31,3 +31,6 @@ admin:
 urls:
   frontend:
     registration-page: "http://localhost:4200/registration"
+
+invites:
+  expires-in-days: 2
