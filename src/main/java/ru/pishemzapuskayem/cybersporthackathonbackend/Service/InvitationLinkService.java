@@ -26,8 +26,17 @@ public class InvitationLinkService {
     @Value("${urls.frontend.registration-page}")
     private String frontendRegistrationPageUrl;
 
+    //todo в app пропертис добавить
+    //invites:
+    //  expires-in-days: 2
+
+    @Value("${invites.expires-in-days}")
+    private int expiresInDays;
+
     @Transactional
-    public String createInvitationLink(String roleName, LocalDate expiryDate) {
+    public String createInvitationLink(String roleName) {
+        LocalDate expiryDate = LocalDate.from(LocalDate.now()).plusDays(expiresInDays);
+
         Role role = roleService.findOrCreateByName(roleName);
 
         InvitationLink link = new InvitationLink();
@@ -42,7 +51,9 @@ public class InvitationLinkService {
     }
 
     @Transactional
-    public List<String> createInvitaionLinks(int amount, String roleName, LocalDate expiryDate) {
+    public List<String> createInvitaionLinks(int amount, String roleName) {
+        LocalDate expiryDate = LocalDate.from(LocalDate.now()).plusDays(expiresInDays);
+
         String token;
         InvitationLink link;
         List<String> urls = new ArrayList<>();

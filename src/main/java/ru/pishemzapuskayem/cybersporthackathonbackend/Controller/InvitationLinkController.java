@@ -28,7 +28,7 @@ public class InvitationLinkController {
     @PostMapping("/create")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<CreateInvitationLinkResponse> createInvitationLink(@RequestBody CreateInvitationLinkRequest request) {
-        String registrationPageUrl = invitationLinkService.createInvitationLink(request.getRole(), request.getExpiryDate());
+        String registrationPageUrl = invitationLinkService.createInvitationLink(request.getRole());
         return ResponseEntity.ok(
                 new CreateInvitationLinkResponse(registrationPageUrl)
         );
@@ -42,8 +42,7 @@ public class InvitationLinkController {
 
         List<String> registrationPageUrls = invitationLinkService.createInvitaionLinks(
                 request.getAmount(),
-                request.getRole(),
-                request.getExpiryDate()
+                request.getRole()
         );
 
         return ResponseEntity.ok(
