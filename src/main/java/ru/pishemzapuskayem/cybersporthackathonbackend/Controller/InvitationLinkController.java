@@ -6,7 +6,11 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateInvitationLinkRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateInvitationLinkResponse;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateInvitationLinksRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateInvitationLinksResponse;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.InvitationLinkService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -27,6 +31,23 @@ public class InvitationLinkController {
         String registrationPageUrl = invitationLinkService.createInvitationLink(request.getRole(), request.getExpiryDate());
         return ResponseEntity.ok(
                 new CreateInvitationLinkResponse(registrationPageUrl)
+        );
+    }
+
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<CreateInvitationLinksResponse> createInvitationLinks(
+            @RequestBody CreateInvitationLinksRequest request
+    ) {
+
+        List<String> registrationPageUrls = invitationLinkService.createInvitaionLinks(
+                request.getAmount(),
+                request.getRole(),
+                request.getExpiryDate()
+        );
+
+        return ResponseEntity.ok(
+                new CreateInvitationLinksResponse(registrationPageUrls)
         );
     }
 }
