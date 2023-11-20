@@ -21,8 +21,11 @@ public class InvitationLinkService {
     private final InvitationLinkRepository repository;
     private final RoleService roleService;
 
+    @Value("${urls.frontend.registration-page}")
+    private String frontendRegistrationPageUrl;
+
     @Transactional
-    public InvitationLink createInvitationLink(String roleName, LocalDate expiryDate) {
+    public String createInvitationLink(String roleName, LocalDate expiryDate) {
         Role role = roleService.findOrCreateByName(roleName);
 
         InvitationLink link = new InvitationLink();
@@ -37,7 +40,7 @@ public class InvitationLinkService {
     }
 
     @Transactional
-    public boolean useLink(String token) {
+    public void useLink(String token) {
         Optional<InvitationLink> linkOpt = repository.findByToken(token);
 
         if (linkOpt.isEmpty() || !isUsable(linkOpt.get())) {
