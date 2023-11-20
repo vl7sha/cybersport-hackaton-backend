@@ -1,6 +1,5 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.DTO;
 
-import jakarta.persistence.Column;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -8,7 +7,7 @@ import java.time.LocalDate;
 
 @Getter
 @Setter
-public class RequestCreateAccountDTO {
+public class CreateAccountRequest {
 
     private String name;
 

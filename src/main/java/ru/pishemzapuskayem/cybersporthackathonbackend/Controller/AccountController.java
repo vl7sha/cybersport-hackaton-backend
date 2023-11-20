@@ -7,7 +7,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.*;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.RequestCreateAccountDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateAccountRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.AccountMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
@@ -32,19 +32,26 @@ public class AccountController {
 
     @PostMapping("/SignUp")
     public ResponseEntity<Void> register(@RequestParam String token,
-                                         @RequestBody RequestCreateAccountDTO requestCreateAccountDTO
+                                         @RequestBody CreateAccountRequest createAccountRequest
     ) {
         Role role = invitationLinkService.useLink(token);
-        accountService.create(accountMapper.map(requestCreateAccountDTO), role);
+        accountService.create(accountMapper.map(createAccountRequest), role);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/SingUp/captain")
+    public ResponseEntity<Void> register(@RequestBody CreateAccountRequest createAccountRequest){
+        String roleName = "ROLE_CAPTAIN";
+        accountService.create(accountMapper.map(createAccountRequest), roleName);
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/SignIn")
-    public ResponseEntity<String> logIn(@RequestBody RequestCreateAccountDTO requestCreateAccountDTO) {
+    public ResponseEntity<String> logIn(@RequestBody CreateAccountRequest createAccountRequest) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        requestCreateAccountDTO.getEmail(),
-                        requestCreateAccountDTO.getPassword());
+                        createAccountRequest.getEmail(),
+                        createAccountRequest.getPassword());
 
         try {
             authenticationManager.authenticate(authenticationToken);
@@ -52,7 +59,7 @@ public class AccountController {
             throw new ApiException("Неправильные логин или пароль");
         }
 
-        String token = jwtUtil.generateToken(requestCreateAccountDTO.getEmail(), tokenExpiresIn);
+        String token = jwtUtil.generateToken(createAccountRequest.getEmail(), tokenExpiresIn);
 
         return ResponseEntity.ok(token);
     }

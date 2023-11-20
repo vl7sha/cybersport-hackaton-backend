@@ -26,9 +26,6 @@ public class InvitationLinkService {
     @Value("${urls.frontend.registration-page}")
     private String frontendRegistrationPageUrl;
 
-    //todo в app пропертис добавить
-    //invites:
-    //  expires-in-days: 2
 
     @Value("${invites.expires-in-days}")
     private int expiresInDays;
