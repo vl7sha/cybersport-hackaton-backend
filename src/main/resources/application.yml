@@ -1,9 +1,9 @@
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5432/cybersport}
-    username: ${SPRING_DATASOURCE_USERNAME:user}
-    password: ${SPRING_DATASOURCE_PASSWORD:1234}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://185.209.160.32:5432/cybersport}
+    username: ${SPRING_DATASOURCE_USERNAME:vl7sha}
+    password: ${SPRING_DATASOURCE_PASSWORD:kITypNEYMenT}
 
   jpa:
     show-sql: true
