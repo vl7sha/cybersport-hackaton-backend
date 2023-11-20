@@ -20,8 +20,8 @@ public class AdminInitializer implements CommandLineRunner {
     private final AccountService service;
     private final UserDetailsServiceImpl userDetailsService;
 
-    @Value("${admin.username}")
-    private String username;
+    @Value("${admin.email}")
+    private String email;
 
     @Value("${admin.password}")
     private String password;
@@ -29,17 +29,17 @@ public class AdminInitializer implements CommandLineRunner {
     @Override
     public void run(String... args) {
         try {
-            UserDetails admin = userDetailsService.loadUserByUsername(username);
+            UserDetails admin = userDetailsService.loadUserByUsername(email);
             logger.info("Admin " + admin.getUsername() + " already created, skipping");
         } catch (UsernameNotFoundException e) {
             String roleName = "ROLE_ADMIN";
             Account admin = new Account(
-                    username,
+                    "amdin",
                     "admin",
                     "admin",
-                    "admin@admin.ru",
+                    "contact",
                     password,
-                    "admin@admin.ru",
+                    email,
                     null,
                     "admin",
                     "admin",

@@ -43,7 +43,7 @@ public class AccountController {
     public ResponseEntity<String> logIn(@RequestBody RequestCreateAccountDTO requestCreateAccountDTO) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        requestCreateAccountDTO.getMail(),
+                        requestCreateAccountDTO.getEmail(),
                         requestCreateAccountDTO.getPassword());
 
         try {
@@ -52,7 +52,7 @@ public class AccountController {
             throw new ApiException("Неправильные логин или пароль");
         }
 
-        String token = jwtUtil.generateToken(requestCreateAccountDTO.getMail(), tokenExpiresIn);
+        String token = jwtUtil.generateToken(requestCreateAccountDTO.getEmail(), tokenExpiresIn);
 
         return ResponseEntity.ok(token);
     }
