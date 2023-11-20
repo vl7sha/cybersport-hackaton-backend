@@ -38,5 +38,4 @@ public class Account extends AbstractEntity {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
-
 }

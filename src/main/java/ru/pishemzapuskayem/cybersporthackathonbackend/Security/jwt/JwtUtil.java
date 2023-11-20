@@ -7,6 +7,8 @@ import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Optional;
 
@@ -23,11 +25,13 @@ public class JwtUtil {
     private String subject;
 
     public String generateToken(String username, int expiresIn) {
+        Date expirationDate = Date.from(ZonedDateTime.now().plusSeconds(expiresIn).toInstant());
         return JWT.create()
                 .withSubject(subject)
                 .withClaim("username", username)
                 .withIssuedAt(new Date())
                 .withIssuer(issuer)
+                .withExpiresAt(expirationDate)
                 .sign(Algorithm.HMAC256(secret));
     }
 
