@@ -10,6 +10,8 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.InvitationLinkRepository;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -37,6 +39,31 @@ public class InvitationLinkService {
         repository.save(link);
 
         return buildInviteLink(token);
+    }
+
+    @Transactional
+    public List<String> createInvitaionLinks(int amount, String roleName, LocalDate expiryDate) {
+        String token;
+        InvitationLink link;
+        List<String> urls = new ArrayList<>();
+        List<InvitationLink> links = new ArrayList<>();
+        Role role = roleService.findOrCreateByName(roleName);
+        for (int i = 0; i < amount; i++) {
+            link = new InvitationLink();
+            token = UUID.randomUUID().toString();
+
+            link.setToken(token);
+            link.setRole(role);
+            link.setExpiryDate(expiryDate);
+            link.setUsed(false);
+
+            links.add(link);
+            urls.add(buildInviteLink(token));
+        }
+
+        repository.saveAll(links);
+
+        return urls;
     }
 
     @Transactional
