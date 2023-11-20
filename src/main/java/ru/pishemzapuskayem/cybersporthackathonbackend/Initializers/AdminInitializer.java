@@ -14,6 +14,7 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Security.UserDetailsServic
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.AccountService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Component
 @RequiredArgsConstructor
@@ -29,26 +30,6 @@ public class AdminInitializer implements CommandLineRunner {
     @Value("${admin.password}")
     private String password;
 
-    @Value("${admin.name}")
-    private String name;
-
-    @Value("${admin.surname}")
-    private String surname;
-
-    @Value("${admin.secondName}")
-    private String secondName;
-
-    @Value("${admin.contact}")
-    private String contact;
-
-    @Value("${admin.datOfBirth}")
-    private LocalDate datOfBirth;
-
-    @Value("${admin.theSubjectOfTheRF}")
-    private String theSubjectOfTheRF;
-
-    @Value("${admin.city}")
-    private String city;
 
     @Override
     public void run(String... args) {
@@ -58,16 +39,10 @@ public class AdminInitializer implements CommandLineRunner {
         } catch (UsernameNotFoundException e) {
             String roleName = "ROLE_ADMIN";
             Account admin = new Account(
-                    name,
-                    surname,
-                    secondName,
-                    contact,
-                    password,
                     email,
-                    datOfBirth,
-                    theSubjectOfTheRF,
-                    city,
-                    null
+                    password,
+                    null,
+                    List.of(email)
             );
 
             service.create(admin, roleName);

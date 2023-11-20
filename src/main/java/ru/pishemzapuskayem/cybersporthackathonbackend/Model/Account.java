@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Entity
 @Getter
@@ -14,28 +15,20 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "account")
-public class Account extends AbstractEntity {
+public class Account extends Person {
 
-    @Column
-    private String name;
-    @Column
-    private String surname;
-    @Column
-    private String secondName;
-    @Column
-    private String contact;
-    @Column
-    private String password;
-    @Column
     private String email;
-    @Column
-    private LocalDate datOfBirth;
-    @Column
-    private String theSubjectOfTheRF;
-    @Column
-    private String city;
+    private String password;
 
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    public Account(String email, String password, Role role, List<String> contacts) {
+        super(contacts);
+
+        this.email = email;
+        this.password = password;
+        this.role = role;
+    }
 }
