@@ -1,5 +1,6 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,9 +12,11 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.AccountMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Security.jwt.JwtUtil;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.AccountService;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Service.InvitationLinkService;
 
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/Account")
 public class AccountController {
 
@@ -21,27 +24,22 @@ public class AccountController {
     private final AccountService accountService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
+    private final InvitationLinkService invitationLinkService;
 
     @Value("${jwt.tokenExpiresIn}")
     private int tokenExpiresIn;
 
-
-    public AccountController(AccountMapper accountMapper, AccountService accountService, AuthenticationManager authenticationManager, JwtUtil jwtUtil) {
-        this.accountMapper = accountMapper;
-        this.accountService = accountService;
-        this.authenticationManager = authenticationManager;
-        this.jwtUtil = jwtUtil;
-    }
-
-
     @PostMapping("/SignUp")
-    public ResponseEntity<Void> register(@RequestBody RequestCreateAccountDTO requestCreateAccountDTO) {
+    public ResponseEntity<Void> register(@RequestParam String token,
+                                         @RequestBody RequestCreateAccountDTO requestCreateAccountDTO
+    ) {
+        invitationLinkService.useLink(token);
         accountService.create(accountMapper.map(requestCreateAccountDTO));
         return ResponseEntity.ok().build();
     }
 
     @PostMapping("/SignIn")
-    public ResponseEntity<String> login(@RequestBody RequestCreateAccountDTO requestCreateAccountDTO) {
+    public ResponseEntity<String> logIn(@RequestBody RequestCreateAccountDTO requestCreateAccountDTO) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
                         requestCreateAccountDTO.getMail(),
