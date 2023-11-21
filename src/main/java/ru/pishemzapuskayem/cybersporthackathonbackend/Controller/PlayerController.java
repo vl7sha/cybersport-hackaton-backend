@@ -3,6 +3,7 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.Controller;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Players.CreatePlayerRequestDTO;
@@ -21,7 +22,7 @@ public class PlayerController {
 
 
     @PostMapping("/SingUp")
-    public ResponseEntity<Void> singUp(CreatePlayerRequestDTO createPlayerRequestDTO){
+    public ResponseEntity<Void> singUp(@RequestBody CreatePlayerRequestDTO createPlayerRequestDTO){
         playerService.create(playerMapper.map(createPlayerRequestDTO), PLAYER_ROLE);
         return ResponseEntity.ok().build();
     }
