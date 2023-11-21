@@ -26,7 +26,6 @@ public class InvitationLinkService {
     @Value("${urls.frontend.registration-page}")
     private String frontendRegistrationPageUrl;
 
-
     @Value("${invites.expires-in-days}")
     private int expiresInDays;
 
@@ -44,11 +43,11 @@ public class InvitationLinkService {
         link.setUsed(false);
         repository.save(link);
 
-        return buildInviteLink(token);
+        return buildRegistrationInviteLink(token);
     }
 
     @Transactional
-    public List<String> createInvitaionLinks(int amount, String roleName) {
+    public List<String> createInvitationLinks(int amount, String roleName) {
         LocalDate expiryDate = LocalDate.from(LocalDate.now()).plusDays(expiresInDays);
 
         String token;
@@ -66,7 +65,7 @@ public class InvitationLinkService {
             link.setUsed(false);
 
             links.add(link);
-            urls.add(buildInviteLink(token));
+            urls.add(buildRegistrationInviteLink(token));
         }
 
         repository.saveAll(links);
@@ -75,7 +74,7 @@ public class InvitationLinkService {
     }
 
     @Transactional
-    public Role useLink(String token) {
+    public Role useRegisterLink(String token) {
         Optional<InvitationLink> linkOpt = repository.findByToken(token);
 
         if (linkOpt.isEmpty() || !isUsable(linkOpt.get())) {
@@ -98,7 +97,7 @@ public class InvitationLinkService {
         return !link.isUsed() && link.getExpiryDate().isAfter(LocalDate.now());
     }
 
-    private String buildInviteLink(String token) {
+    private String buildRegistrationInviteLink(String token) {
         return frontendRegistrationPageUrl + "?token=" + token;
     }
 }
