@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateAccountRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.BasicAuth.AuthRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Security.jwt.JwtUtil;
 
@@ -27,11 +27,11 @@ public class AccountController {
     private int tokenExpiresIn;
 
     @PostMapping("/SignIn")
-    public ResponseEntity<String> logIn(@RequestBody CreateAccountRequest createAccountRequest) {
+    public ResponseEntity<String> logIn(@RequestBody AuthRequestDTO authRequestDTO) {
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
-                        createAccountRequest.getEmail(),
-                        createAccountRequest.getPassword());
+                        authRequestDTO.getEmail(),
+                        authRequestDTO.getPassword());
 
         try {
             authenticationManager.authenticate(authenticationToken);
@@ -39,7 +39,7 @@ public class AccountController {
             throw new ApiException("Неправильные логин или пароль");
         }
 
-        String token = jwtUtil.generateToken(createAccountRequest.getEmail(), tokenExpiresIn);
+        String token = jwtUtil.generateToken(authRequestDTO.getEmail(), tokenExpiresIn);
 
         return ResponseEntity.ok(token);
     }
