@@ -4,10 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateInvitationLinkRequest;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateInvitationLinkResponse;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateInvitationLinksRequest;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateInvitationLinksResponse;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Invites.CreateInvitationLinkRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Invites.CreateInvitationLinkResponse;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Invites.CreateInvitationLinksRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Invites.CreateInvitationLinksResponse;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.InvitationLinkService;
 
 import java.util.List;

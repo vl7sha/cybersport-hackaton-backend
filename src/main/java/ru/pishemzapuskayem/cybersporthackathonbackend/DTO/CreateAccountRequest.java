@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @Getter
 @Setter
@@ -15,15 +16,13 @@ public class CreateAccountRequest {
 
     private String secondName;
 
-    private String contact;
+    private List<String> contacts;
 
     private String password;
 
     private String email;
 
-    private LocalDate datOfBirth;
+    private LocalDate dateOfBirth;
 
     private String theSubjectOfTheRF;
-
-    private String city;
 }

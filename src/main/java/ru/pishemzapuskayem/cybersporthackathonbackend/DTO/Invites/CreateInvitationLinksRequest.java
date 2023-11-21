@@ -1,4 +1,4 @@
-package ru.pishemzapuskayem.cybersporthackathonbackend.DTO;
+package ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Invites;
 
 import lombok.Getter;
 import lombok.Setter;
