@@ -28,7 +28,6 @@ public class TournamentController {
     @PutMapping("/update")
     @PreAuthorize("hasRole('JUDGE')")
     public ResponseEntity<Void> update(@RequestParam CreateTournamentRequest createTournamentRequest){
-        tournamentService.update(tournamentMapper.map(createTournamentRequest));
         return ResponseEntity.ok().build();
     }
 

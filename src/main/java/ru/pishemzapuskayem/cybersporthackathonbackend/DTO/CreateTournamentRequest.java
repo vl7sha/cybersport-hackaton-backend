@@ -1,5 +1,6 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.DTO;
 
+import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
@@ -18,9 +19,5 @@ public class CreateTournamentRequest {
     private LocalDate registrationDate;
     private LocalDate closingDate;
     private LocalDate reportDate;
-    private Account organizer;
-    private Account chiefJudge;
-    private Account chiefSecretary;
-    private List<Account> judges;
-    private List<Account> secretaries;
+    private String organizer;
 }

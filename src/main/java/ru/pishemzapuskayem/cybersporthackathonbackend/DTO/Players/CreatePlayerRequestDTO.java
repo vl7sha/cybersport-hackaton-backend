@@ -8,6 +8,6 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateAccountRequest;
 @Setter
 public class CreatePlayerRequestDTO extends CreateAccountRequest {
     private String gender;
-    private String rank;
+    private Integer rank;
     private String gto;
 }

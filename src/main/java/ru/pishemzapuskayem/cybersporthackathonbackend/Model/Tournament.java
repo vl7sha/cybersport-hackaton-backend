@@ -20,15 +20,13 @@ public class Tournament extends AbstractEntity {
     private LocalDate registrationDate;
     private LocalDate closingDate;
     private LocalDate reportDate;
+    private String organizer;
 
     @ManyToMany
     private List<Team> teams;
 
     @OneToMany
     private List<Match> matches;
-
-    @ManyToOne
-    private Account organizer;
 
     @ManyToOne
     private Account chiefJudge;
