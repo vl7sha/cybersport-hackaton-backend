@@ -2,8 +2,7 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams;
 
 import lombok.Getter;
 import lombok.Setter;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreatePlayerRequest;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Players.CreatePlayerDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreatePlayerRequestDTO;
 
 import java.util.List;
 
@@ -11,5 +10,5 @@ import java.util.List;
 @Setter
 public class CreateTeamRequestDTO {
     private String name;
-    private List<CreatePlayerRequest> players;
+    private List<CreatePlayerRequestDTO> players;
 }

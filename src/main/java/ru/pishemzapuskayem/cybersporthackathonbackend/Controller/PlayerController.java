@@ -5,10 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreatePlayerRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreatePlayerRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.PlayerMapper;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.RoleRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.PlayerService;
 
 @RestController
@@ -23,9 +21,9 @@ public class PlayerController {
 
 
     @PostMapping("/SingUp")
-    public ResponseEntity<Void> singUp(CreatePlayerRequest createPlayerRequest){
+    public ResponseEntity<Void> singUp(CreatePlayerRequestDTO createPlayerRequestDTO){
 
-        playerService.create(playerMapper.map(createPlayerRequest), PLAYER_ROLE);
+        playerService.create(playerMapper.map(createPlayerRequestDTO), PLAYER_ROLE);
 
         return ResponseEntity.ok().build();
     }

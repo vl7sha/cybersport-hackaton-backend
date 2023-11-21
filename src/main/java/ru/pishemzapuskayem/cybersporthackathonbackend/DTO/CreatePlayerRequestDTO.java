@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreatePlayerRequest extends CreateAccountRequest{
+public class CreatePlayerRequestDTO extends CreateAccountRequest{
     private String gender;
     private String rank;
     private String gto;
