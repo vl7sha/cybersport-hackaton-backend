@@ -19,8 +19,8 @@ public abstract class Person extends AbstractEntity {
     private String firstName;
     private String lastName;
     private String middleName;
-    private String subjectOfRF;
     private LocalDate birthDate;
+    private String subjectOfRF;
 
     @ElementCollection
     private List<String> contacts;

@@ -6,14 +6,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateAccountRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.AccountMapper;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Security.jwt.JwtUtil;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Service.AccountService;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Service.InvitationLinkService;
 
 
 @RestController
@@ -21,30 +20,11 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Service.InvitationLinkServ
 @RequestMapping("/api/Account")
 public class AccountController {
 
-    private final AccountMapper accountMapper;
-    private final AccountService accountService;
     private final AuthenticationManager authenticationManager;
     private final JwtUtil jwtUtil;
-    private final InvitationLinkService invitationLinkService;
 
     @Value("${jwt.tokenExpiresIn}")
     private int tokenExpiresIn;
-
-    @PostMapping("/SignUp")
-    public ResponseEntity<Void> register(@RequestParam String token,
-                                         @RequestBody CreateAccountRequest createAccountRequest
-    ) {
-        Role role = invitationLinkService.useLink(token);
-        accountService.create(accountMapper.map(createAccountRequest), role);
-        return ResponseEntity.ok().build();
-    }
-
-    @PostMapping("/SingUp/player")
-    public ResponseEntity<Void> register(@RequestBody CreateAccountRequest createAccountRequest){
-        String roleName = "ROLE_PLAYER";
-        accountService.create(accountMapper.map(createAccountRequest), roleName);
-        return ResponseEntity.ok().build();
-    }
 
     @PostMapping("/SignIn")
     public ResponseEntity<String> logIn(@RequestBody CreateAccountRequest createAccountRequest) {

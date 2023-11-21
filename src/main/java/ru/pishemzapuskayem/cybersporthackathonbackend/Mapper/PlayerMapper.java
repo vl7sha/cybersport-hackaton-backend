@@ -3,7 +3,7 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreatePlayerRequestDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Players.CreatePlayerRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Player;
 
 @Component
