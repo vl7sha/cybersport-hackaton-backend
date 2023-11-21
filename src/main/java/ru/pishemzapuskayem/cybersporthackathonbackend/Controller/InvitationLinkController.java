@@ -40,7 +40,7 @@ public class InvitationLinkController {
             @RequestBody CreateInvitationLinksRequest request
     ) {
 
-        List<String> registrationPageUrls = invitationLinkService.createInvitaionLinks(
+        List<String> registrationPageUrls = invitationLinkService.createInvitationLinks(
                 request.getAmount(),
                 request.getRole()
         );

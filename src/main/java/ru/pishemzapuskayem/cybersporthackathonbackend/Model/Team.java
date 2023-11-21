@@ -1,8 +1,8 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Model;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -13,9 +13,10 @@ import java.util.List;
 @Entity
 public class Team extends AbstractEntity {
     private String name;
+    private String invitationToken;
 
-    @ManyToOne
-    private Account captain;
+    @OneToOne
+    private Player captain;
 
     @OneToMany
     private List<Player> players;

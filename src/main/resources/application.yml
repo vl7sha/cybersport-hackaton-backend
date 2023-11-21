@@ -24,6 +24,7 @@ admin:
 urls:
   frontend:
     registration-page: "http://localhost:4200/registration"
+    join-team-page: "http://localhost:4200/teams/join"
 
 invites:
   expires-in-days: 2

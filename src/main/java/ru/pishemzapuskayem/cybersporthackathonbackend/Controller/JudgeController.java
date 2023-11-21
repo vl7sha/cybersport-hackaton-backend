@@ -29,7 +29,7 @@ public class JudgeController {
     public ResponseEntity<Void> register(@RequestParam String token,
                                          @RequestBody CreateJudgeRequestDTO createJudgeRequestDTO
     ) {
-        Role role = invitationLinkService.useLink(token);
+        Role role = invitationLinkService.useRegisterLink(token);
         if (!Objects.equals(role.getName(), JUDGE_ROLE)) {
             throw new ApiException("Вы не можете зарегистрироваться как судья");
         }
