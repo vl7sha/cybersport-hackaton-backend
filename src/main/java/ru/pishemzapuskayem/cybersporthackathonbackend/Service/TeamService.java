@@ -11,6 +11,7 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.PlayerRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TeamRepository;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
@@ -67,12 +68,16 @@ public class TeamService {
         Player authenticatedPlayer = getAuthenticated();
         List<Player> players = team.getPlayers();
 
-        if (players.contains(authenticatedPlayer)) {
-            throw new ApiException("Вы уже вступили в команду");
-        }
+        if (players != null) {
+            if (players.contains(authenticatedPlayer)) {
+                throw new ApiException("Вы уже вступили в команду");
+            }
 
-        if (Objects.equals(team.getCaptain(), authenticatedPlayer)) {
-            throw new ApiException("Вы уже вступили в команду как капитан");
+            if (Objects.equals(team.getCaptain(), authenticatedPlayer)) {
+                throw new ApiException("Вы уже вступили в команду как капитан");
+            }
+        } else {
+            players = new ArrayList<>();
         }
 
         players.add(authenticatedPlayer);
