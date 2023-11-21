@@ -5,28 +5,26 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Judge;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Player;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.JudgeRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRepository;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TournamentService {
 
-    TournamentRepository tournamentRepository;
+    private final TournamentRepository tournamentRepository;
     private final JudgeRepository judgeRepository;
 
+    @Transactional
     public void create(Tournament tournament){
-        Account org = getAuthenticated();
+        Judge org = getAuthenticated();
         tournament.setChiefJudge(org);
         tournamentRepository.save(tournament);
     }
+
 
 
     private Judge getAuthenticated() {

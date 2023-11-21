@@ -6,9 +6,8 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateTournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.TournamentMapper;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentRequestService;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentService;
-
-import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -17,6 +16,7 @@ public class TournamentController {
 
     TournamentService tournamentService;
     TournamentMapper tournamentMapper;
+    TournamentRequestService tournamentRequestService;
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('JUDGE')")
@@ -25,21 +25,17 @@ public class TournamentController {
         return ResponseEntity.ok().build();
     }
 
-    @PutMapping("/update")
-    @PreAuthorize("hasRole('JUDGE')")
-    public ResponseEntity<Void> update(@RequestParam CreateTournamentRequest createTournamentRequest){
+    @PostMapping("/{tournamentId}/send-request")
+    @PreAuthorize("hasRole('CAPTAIN')")
+    public ResponseEntity<Void> sendRequest(@PathVariable Long tournamentId, @RequestParam Long teamId) {
+        tournamentRequestService.sendJoinRequest(tournamentId, teamId);
         return ResponseEntity.ok().build();
     }
 
-
-    @GetMapping("/list")
-    public ResponseEntity<List<Void>> getTournamentLists(){
-        return ResponseEntity.ok().build();
-    }
-
-
-    @GetMapping("/{id}")
-    public ResponseEntity<Void> getTournament(@RequestParam String id){
+    @PostMapping("/{tournamentId}/join")
+    @PreAuthorize("hasRole('CAPTAIN')")
+    public ResponseEntity<Void> tryJoin(@PathVariable Long tournamentId, @RequestParam Long teamId) {
+        tournamentRequestService.tryJoin(tournamentId, teamId);
         return ResponseEntity.ok().build();
     }
 }
