@@ -2,6 +2,7 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.DTO;
 
 import lombok.Getter;
 import lombok.Setter;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -9,7 +10,6 @@ import java.util.List;
 @Getter
 @Setter
 public class CreateAccountRequest {
-
     private String name;
 
     private String surname;

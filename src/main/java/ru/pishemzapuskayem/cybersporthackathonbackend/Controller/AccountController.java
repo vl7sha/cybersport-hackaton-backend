@@ -39,9 +39,9 @@ public class AccountController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/SingUp/captain")
+    @PostMapping("/SingUp/player")
     public ResponseEntity<Void> register(@RequestBody CreateAccountRequest createAccountRequest){
-        String roleName = "ROLE_CAPTAIN";
+        String roleName = "ROLE_PLAYER";
         accountService.create(accountMapper.map(createAccountRequest), roleName);
         return ResponseEntity.ok().build();
     }

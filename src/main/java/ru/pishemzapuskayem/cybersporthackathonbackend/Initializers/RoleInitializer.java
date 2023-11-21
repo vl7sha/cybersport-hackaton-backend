@@ -21,7 +21,8 @@ public class RoleInitializer implements CommandLineRunner {
         List<String> roles = List.of(
                 "ROLE_ADMIN",
                 "ROLE_JUDGE",
-                "ROLE_CAPTAIN"
+                "ROLE_CAPTAIN",
+                "ROLE_PLAYER"
         );
 
         for (var roleName : roles) {
