@@ -21,7 +21,7 @@ public class PlayerController {
     private final PlayerMapper playerMapper;
 
 
-    @PostMapping("/SingUp")
+    @PostMapping("/SignUp")
     public ResponseEntity<Void> singUp(@RequestBody CreatePlayerRequestDTO createPlayerRequestDTO){
         playerService.create(playerMapper.map(createPlayerRequestDTO), PLAYER_ROLE);
         return ResponseEntity.ok().build();
