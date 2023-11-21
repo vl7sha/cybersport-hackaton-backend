@@ -10,8 +10,6 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.AccountRepository;
 
-import java.util.Optional;
-
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -20,7 +18,6 @@ public class AccountService {
     private final AccountRepository accountRepository;
     private final PasswordEncoder passwordEncoder;
     private final RoleService roleService;
-
 
     @Transactional
     public void create(Account account, String roleName) {
