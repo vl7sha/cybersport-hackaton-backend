@@ -1,6 +1,7 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.DiscriminatorValue;
+import jakarta.persistence.Entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,13 +12,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@DiscriminatorValue("2")
-public class Player extends Account {
+@DiscriminatorValue("1")
+public class Judge extends Account {
 
-    private String gender;
-    private Integer rank;
-    private String gto;
-
-    @ManyToOne
-    private Team team;
+    private String residence;
+    private Integer certificationLevel;
 }
