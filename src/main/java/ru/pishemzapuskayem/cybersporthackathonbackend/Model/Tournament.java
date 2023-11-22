@@ -29,14 +29,14 @@ public class Tournament extends AbstractEntity {
     private List<Match> matches;
 
     @ManyToOne
-    private Account chiefJudge;
+    private Judge chiefJudge;
 
     @ManyToOne
-    private Account chiefSecretary;
+    private Judge chiefSecretary;
 
     @ManyToMany
-    private List<Account> judges;
+    private List<Judge> judges;
 
     @ManyToMany
-    private List<Account> secretaries;
+    private List<Judge> secretaries;
 }

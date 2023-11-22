@@ -2,58 +2,57 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.Service;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
-import lombok.AllArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.*;
 
 @Service
 @RequiredArgsConstructor
 public class MailService {
 
+    private final JavaMailSender javaMailSender;
 
     @Value("${mail.username}")
     private String mailFrom;
 
-    private final JavaMailSender javaMailSender;
-
-    public void joinRequestEmail(Account account, Tournament tournament, Team team) {
-        MimeMessage memeMailMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(memeMailMessage, "UTF-8");
+    public void sendMessage(Account to, String subject, String msg) {
+        MimeMessage mimeMailMessage = javaMailSender.createMimeMessage();
+        MimeMessageHelper helper = new MimeMessageHelper(mimeMailMessage, "UTF-8");
 
         try {
             helper.setFrom(mailFrom);
-            helper.setTo(account.getEmail());
-            helper.setSubject("Запрос команды на участие турнира : " + tournament.getName());
-            helper.setText(buildJoinRequestText(team, tournament));
-            javaMailSender.send(memeMailMessage);
+            helper.setTo(to.getEmail());
+            helper.setSubject(subject);
+            helper.setText(msg);
+            javaMailSender.send(mimeMailMessage);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public void captainEmail(Account account, Tournament tournament, Boolean isApprove) {
-        MimeMessage memeMailMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(memeMailMessage, "UTF-8");
-
-        try {
-            helper.setFrom(mailFrom);
-            helper.setTo(account.getEmail());
-            helper.setSubject("Решение участия на турнире " + tournament.getName());
-            if (isApprove) helper.setText(buildApproveText(tournament));
-            else helper.setText(buildRejectText(tournament));
-            javaMailSender.send(memeMailMessage);
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
+    public void sendTournamentRequestNotification(Judge to, Tournament tournament, Team team) {
+        String subject = "Запрос команды на участие турнира : " + tournament.getName();
+        String msg = buildJoinRequestMsg(team, tournament);
+        sendMessage(to, subject, msg);
     }
 
-    private String buildJoinRequestText(Team team, Tournament tournament) {
+    public void sendRequestApprovedNotification(Player to, Tournament tournament) {
+        String subject = "Решение участия на турнире " + tournament.getName();
+        String msg = buildApproveMsg(tournament);
+        sendMessage(to, subject, msg);
+    }
+
+    public void sendRequestRejectedNotification(Player to, Tournament tournament) {
+        String subject = "Решение участия на турнире " + tournament.getName();
+        String msg = buildRejectMsg(tournament);
+        sendMessage(to, subject, msg);
+    }
+
+    //todo стили для html
+    private String buildJoinRequestMsg(Team team, Tournament tournament) {
         return "<div>" +
                 "Команда:" + team.getName() +
                 " подала заявку на участие в турнире "
@@ -61,14 +60,14 @@ public class MailService {
                 "</div>";
     }
 
-
-    private String buildApproveText(Tournament tournament) {
+    //todo стили для html
+    private String buildApproveMsg(Tournament tournament) {
         return "<div>" +
                 "Ваша заявка на турнир " + tournament.getName() + " была принята"+
                 "</div>";
     }
 
-    private String buildRejectText(Tournament tournament) {
+    private String buildRejectMsg(Tournament tournament) {
         return "<div>" +
                 "Ваша заявка на турнир " + tournament.getName() + " была отклонена"+
                 "</div>";

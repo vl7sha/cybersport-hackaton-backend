@@ -47,7 +47,11 @@ public class TournamentRequestService {
 
         requestRepository.save(joinRequest);
 
-        mailService.joinRequestEmail(tournament.getChiefJudge(), tournament, team);
+        mailService.sendTournamentRequestNotification(
+                tournament.getChiefJudge(),
+                tournament,
+                team
+        );
     }
 
     @Transactional
@@ -58,7 +62,10 @@ public class TournamentRequestService {
         request.setIsApproved(true);
         requestRepository.save(request);
 
-        mailService.captainEmail(request.getTeam().getCaptain(),request.getTournament(), true);
+        mailService.sendRequestApprovedNotification(
+                request.getTeam().getCaptain(),
+                request.getTournament()
+        );
     }
 
     @Transactional
@@ -69,7 +76,10 @@ public class TournamentRequestService {
         request.setIsApproved(false);
         requestRepository.save(request);
 
-        mailService.captainEmail(request.getTeam().getCaptain(),request.getTournament(), false);
+        mailService.sendRequestRejectedNotification(
+                request.getTeam().getCaptain(),
+                request.getTournament()
+        );
     }
 
     public void tryJoin(Long tournamentId, Long teamId) {

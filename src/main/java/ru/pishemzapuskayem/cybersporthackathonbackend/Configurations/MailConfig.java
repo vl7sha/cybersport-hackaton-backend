@@ -1,4 +1,4 @@
-package ru.pishemzapuskayem.cybersporthackathonbackend.Mail;
+package ru.pishemzapuskayem.cybersporthackathonbackend.Configurations;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -22,12 +22,14 @@ public class MailConfig {
     private String protocol;
     @Value("${mail.smtps.auth}")
     private String smtpsAuth;
+
     @Bean
     public JavaMailSender getJavaMailSender() {
         JavaMailSenderImpl mailSender = configureMailSender();
         mailSender.setJavaMailProperties(properties(mailSender));
         return mailSender;
     }
+
     private JavaMailSenderImpl configureMailSender(){
         JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
         mailSender.setHost(host);
@@ -37,6 +39,7 @@ public class MailConfig {
         mailSender.setPassword(password);
         return mailSender;
     }
+
     private Properties properties(JavaMailSenderImpl mailSender){
         Properties props = mailSender.getJavaMailProperties();
         props.put("mail.transport.protocol", protocol);
