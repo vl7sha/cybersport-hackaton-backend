@@ -1,4 +1,4 @@
-package ru.pishemzapuskayem.cybersporthackathonbackend.DTO;
+package ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament;
 
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
