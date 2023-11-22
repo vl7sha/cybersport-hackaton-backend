@@ -24,7 +24,6 @@ public class JudgeController {
     private final JudgeService judgeService;
     private final InvitationLinkService invitationLinkService;
 
-
     @PostMapping("/SignUp")
     public ResponseEntity<Void> register(@RequestParam String token,
                                          @RequestBody CreateJudgeRequestDTO createJudgeRequestDTO
