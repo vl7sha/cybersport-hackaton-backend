@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.AddJudgesTournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateTournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.TournamentMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentRequestService;
@@ -38,4 +39,14 @@ public class TournamentController {
         tournamentRequestService.tryJoin(tournamentId, teamId);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/{tournamentId}/addJudges")
+    @PreAuthorize("hasRole('JUDGE')")
+    public ResponseEntity<Void> addJudges(@PathVariable Long tournamentId,
+                                         @RequestBody AddJudgesTournamentRequest addJudgeTournamentRequest) {
+
+        tournamentService.addJudges(tournamentId,addJudgeTournamentRequest);
+        return ResponseEntity.ok().build();
+    }
+
 }
