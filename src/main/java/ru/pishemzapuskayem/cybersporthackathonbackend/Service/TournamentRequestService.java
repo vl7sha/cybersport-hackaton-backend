@@ -1,6 +1,9 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
@@ -10,6 +13,7 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Model.TournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TeamRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRequestRepository;
+import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
 
 import java.util.ArrayList;
 import java.util.Optional;
@@ -111,5 +115,13 @@ public class TournamentRequestService {
 
         tournament.getTeams().add(team);
         tournamentRepository.save(tournament);
+    }
+
+    public Page<TournamentRequest> findPendingRequestsByTournamentId(XPage page, Long tournamentId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+        Pageable pageable = PageRequest.of(page.getPage(), page.getItemsPerPage());
+        return requestRepository.findByTournamentAndIsApprovedIsNull(tournament, pageable);
     }
 }

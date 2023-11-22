@@ -4,6 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateTournamentRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentShortDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament;
 
 @Component
@@ -22,5 +23,9 @@ public class TournamentMapper {
         tournament.setTeams(null);
         tournament.setMatches(null);
         return tournament;
+    }
+
+    public TournamentShortDTO map(Tournament tournament) {
+        return modelMapper.map(tournament, TournamentShortDTO.class);
     }
 }
