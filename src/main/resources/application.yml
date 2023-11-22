@@ -6,7 +6,7 @@ spring:
     password: ${SPRING_DATASOURCE_PASSWORD:kITypNEYMenT}
 
   jpa:
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: create-drop
     open-in-view: false
@@ -28,3 +28,11 @@ urls:
 
 invites:
   expires-in-days: 2
+
+mail:
+  host: smtp.mail.ru
+  port: 465
+  username: "vl7shabyandex.ru@mail.ru"
+  password: xMdQjsywQjvNHLSDYJih
+  protocol: smtps
+  smtps.auth: true
