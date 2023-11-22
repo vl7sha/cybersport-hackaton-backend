@@ -4,10 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.Judge.AddJudgesTournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateTournamentRequest;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.Judge.DeleteJudgeTournamentRequest;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.Judge.UpdateChiefJudgeTournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.TournamentMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentRequestService;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentService;
@@ -42,31 +39,24 @@ public class TournamentController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{tournamentId}/addJudges")
-    @PreAuthorize("hasRole('JUDGE')")
-    public ResponseEntity<Void> addJudges(@PathVariable Long tournamentId,
-                                         @RequestBody AddJudgesTournamentRequest addJudgeTournamentRequest) {
-
-        tournamentService.addJudges(tournamentId,addJudgeTournamentRequest);
+    @PostMapping("/{tournamentId}/judges")
+    @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
+    public ResponseEntity<Void> addJudge(@PathVariable Long tournamentId, @RequestParam Long judgeId) {
+        tournamentService.addJudge(tournamentId, judgeId);
         return ResponseEntity.ok().build();
     }
 
-    //todo поменять DTO
-    @PostMapping("/{tournamentId}/updateChiefJudges")
-    @PreAuthorize("hasRole('JUDGE')")
-    public ResponseEntity<Void> updateChiefJudges(@PathVariable Long tournamentId,
-                                                  @RequestBody UpdateChiefJudgeTournamentRequest updateChiefJudgeTournamentRequest){
-        tournamentService.updateChiefJudge(tournamentId,updateChiefJudgeTournamentRequest);
+    @DeleteMapping("/{tournamentId}/judges/{judgeId}")
+    @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
+    public ResponseEntity<Void> deleteJudge(@PathVariable Long tournamentId, @PathVariable Long judgeId) {
+        tournamentService.removeJudge(tournamentId, judgeId);
         return ResponseEntity.ok().build();
     }
 
-    //todo поменять DTO
-    @PostMapping("/{tournamentId}/deleteJudges")
-    @PreAuthorize("hasRole('JUDGE')")
-    public ResponseEntity<Void> deleteJudge(@PathVariable Long tournamentId,
-                                                  @RequestBody DeleteJudgeTournamentRequest deleteJudgeTournamentRequest){
-        tournamentService.deleteChiefJudge(tournamentId,deleteJudgeTournamentRequest);
+    @PatchMapping("/{tournamentId}/judges/{judgeId}")
+    @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
+    public ResponseEntity<Void> updateChiefJudges(@PathVariable Long tournamentId, @PathVariable Long judgeId){
+        tournamentService.updateChiefJudge(tournamentId, judgeId);
         return ResponseEntity.ok().build();
     }
-
 }

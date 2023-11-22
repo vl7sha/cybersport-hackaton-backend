@@ -4,9 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.Judge.AddJudgesTournamentRequest;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.Judge.DeleteJudgeTournamentRequest;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.Judge.UpdateChiefJudgeTournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Judge;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament;
@@ -31,7 +28,7 @@ public class TournamentService {
     }
 
     @Transactional
-    public void addJudges(Long tournamentId, AddJudgesTournamentRequest addJudgeTournamentRequest) {
+    public void addJudge(Long tournamentId, Long judgeId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new ApiException("Турнир не найден"));
 
@@ -39,65 +36,56 @@ public class TournamentService {
             throw new ApiException("Вы не можете добавлять судей");
         }
 
-        List<Judge> judges = tournament.getJudges();
+        Judge judge = judgeRepository.findById(judgeId)
+                .orElseThrow(() -> new ApiException("Аккаунт судьи не найден"));
 
-        for (Long idJudge: addJudgeTournamentRequest.getIdJudges()
-        ) {
-            Judge judge = judgeRepository.findById(idJudge)
-                    .orElseThrow(() -> new ApiException("Аккаунт судьи не найден"));
-
-            if (tournament.getJudges().contains(judge)){
-                throw new ApiException("Такой судья уже есть");
-            }
-
-            judges.add(judge);
+        if (tournament.getJudges().contains(judge)){
+            throw new ApiException("Такой судья уже есть");
         }
 
+        tournament.getJudges().add(judge);
         tournamentRepository.save(tournament);
     }
 
     @Transactional
-    public void updateChiefJudge(Long tournamentId, UpdateChiefJudgeTournamentRequest addJudgesTournamentRequest) {
+    public void removeJudge(Long tournamentId, Long judgeId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new ApiException("Турнир не найден"));
-
-        List<Judge> judges = tournament.getJudges();
-
-        Judge oldChiefJudge = getAuthenticated();
-
-        Judge newChiefJudge = judgeRepository.findById(addJudgesTournamentRequest.getIdJudge()).orElseThrow(
-                () -> new ApiException("Такого аккаунта нет")
-        );
-
-        if (oldChiefJudge != tournament.getChiefJudge()){
-            throw new ApiException("Вы не можете изменять главного судью");
-        }
-
-        tournament.setChiefJudge(newChiefJudge);
-
-        judges.remove(newChiefJudge);
-        judges.add(oldChiefJudge);
-
-        tournamentRepository.save(tournament);
-    }
-
-
-    public void deleteChiefJudge(Long tournamentId, DeleteJudgeTournamentRequest deleteJudgeTournamentRequest) {
-        Tournament tournament = tournamentRepository.findById(tournamentId)
-                .orElseThrow(() -> new ApiException("Турнир не найден"));
-
-        List<Judge> judges = tournament.getJudges();
-
-        Judge removeChiefJudge = judgeRepository.findById(deleteJudgeTournamentRequest.getIdJudge()).orElseThrow(
-                () -> new ApiException("Такого аккаунта нет")
-        );
 
         if (tournament.getChiefJudge() != getAuthenticated()){
             throw new ApiException("Вы не можете удалять судей");
         }
 
-        judges.remove(removeChiefJudge);
+        Judge judge = judgeRepository.findById(judgeId)
+                .orElseThrow(() -> new ApiException("Аккаунт судьи не найден"));
 
+        if (!tournament.getJudges().contains(judge)){
+            throw new ApiException("Судья не связан с этим турниром");
+        }
+
+        tournament.getJudges().remove(judge);
+        tournamentRepository.save(tournament);
+    }
+
+    @Transactional
+    public void updateChiefJudge(Long tournamentId, Long newJudgeId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+        Judge oldChiefJudge = getAuthenticated();
+        if (oldChiefJudge != tournament.getChiefJudge()){
+            throw new ApiException("Вы не можете изменять главного судью");
+        }
+
+        List<Judge> judges = tournament.getJudges();
+
+        Judge newChiefJudge = judgeRepository.findById(newJudgeId).orElseThrow(
+                () -> new ApiException("Такого аккаунта нет")
+        );
+
+        tournament.setChiefJudge(newChiefJudge);
+        judges.remove(newChiefJudge);
+        judges.add(oldChiefJudge);
 
         tournamentRepository.save(tournament);
     }
@@ -107,6 +95,4 @@ public class TournamentService {
         return judgeRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException("Аккаунт судьи не найден"));
     }
-
-
 }
