@@ -123,6 +123,84 @@ public class TournamentService {
         tournamentRepository.save(tournament);
     }
 
+    public void addSecretary(Long tournamentId, Long secretariesId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+        if (tournament.getChiefJudge() != getAuthenticated()){
+            throw new ApiException("Вы не можете добавлять секретарей");
+        }
+
+        Judge judge = judgeRepository.findById(secretariesId)
+                .orElseThrow(() -> new ApiException("Аккаунт не найден"));
+
+        if (tournament.getSecretaries().contains(judge)){
+            throw new ApiException("Такой секретарь уже есть");
+        }
+
+        tournament.getSecretaries().add(judge);
+        tournamentRepository.save(tournament);
+    }
+
+    public void addChiefSecretary(Long tournamentId, Long secretariesId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+        if (tournament.getChiefJudge() != getAuthenticated()){
+            throw new ApiException("Вы не можете добавлять секретарей");
+        }
+
+        Judge chiefSecretary = judgeRepository.findById(secretariesId)
+                .orElseThrow(() -> new ApiException("Аккаунт не найден"));
+
+        if (tournament.getChiefSecretary() == chiefSecretary){
+            throw new ApiException("Такой секретарь уже стоит");
+        }
+
+        tournament.setChiefSecretary(chiefSecretary);
+        tournamentRepository.save(tournament);
+    }
+
+    public void updateChiefSecretary(Long tournamentId, Long secretariesId){
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+        if (tournament.getChiefJudge() != getAuthenticated()){
+            throw new ApiException("Вы не можете добавлять секретарей");
+        }
+
+        Judge oldChiefSecretary = tournament.getChiefSecretary();
+
+        Judge newChiefSecretary = judgeRepository.findById(secretariesId)
+                .orElseThrow(() -> new ApiException("Аккаунт не найден"));
+
+        if (oldChiefSecretary == newChiefSecretary){
+            throw new ApiException("Такой секретарь уже стоит");
+        }
+
+        tournament.setChiefSecretary(newChiefSecretary);
+        tournamentRepository.save(tournament);
+    }
+
+    public void removeSecretary(Long tournamentId, Long secretaryId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+        if (tournament.getChiefJudge() != getAuthenticated()){
+            throw new ApiException("Вы не можете удалять секретарей");
+        }
+
+        Judge secretary = judgeRepository.findById(secretaryId)
+                .orElseThrow(() -> new ApiException("Аккаунт не найден"));
+
+        if (!tournament.getSecretaries().contains(secretary)){
+            throw new ApiException("Такого секретаря там нет");
+        }
+
+        tournament.getSecretaries().remove(secretary);
+        tournamentRepository.save(tournament);
+    }
+
     private Judge getAuthenticated() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return judgeRepository.findByEmail(email)
