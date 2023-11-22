@@ -3,7 +3,7 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Role;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.RoleRepository;
 
 import java.util.Optional;

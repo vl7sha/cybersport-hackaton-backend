@@ -6,7 +6,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Player;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Player;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.PlayerRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TeamRepository;

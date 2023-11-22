@@ -1,4 +1,4 @@
-package ru.pishemzapuskayem.cybersporthackathonbackend.Model;
+package ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
 
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.MappedSuperclass;
@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.AbstractEntity;
 
 import java.time.LocalDate;
 import java.util.List;

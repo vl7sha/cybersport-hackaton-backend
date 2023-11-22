@@ -59,4 +59,11 @@ public class TournamentController {
         tournamentService.updateChiefJudge(tournamentId, judgeId);
         return ResponseEntity.ok().build();
     }
+
+    @PostMapping("/{tournamentId}")
+    @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
+    public ResponseEntity<Void> updateChiefJudges(@PathVariable Long tournamentId){
+        tournamentService.startTournament(tournamentId);
+        return ResponseEntity.ok().build();
+    }
 }

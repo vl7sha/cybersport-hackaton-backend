@@ -5,8 +5,9 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Judge;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Judge;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentStage;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.JudgeRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRepository;
 
@@ -19,11 +20,18 @@ public class TournamentService {
 
     private final TournamentRepository tournamentRepository;
     private final JudgeRepository judgeRepository;
+    private final TournamentStageService tournamentStageService;
 
     @Transactional
     public void create(Tournament tournament){
         Judge org = getAuthenticated();
         tournament.setChiefJudge(org);
+        tournament.setIsStarted(false);
+
+        List<TournamentStage> stages = tournamentStageService.createEmptyTournamentStages();
+        stages.forEach(stage -> stage.setTournament(tournament));
+        tournament.setStages(stages);
+
         tournamentRepository.save(tournament);
     }
 
@@ -87,6 +95,31 @@ public class TournamentService {
         judges.remove(newChiefJudge);
         judges.add(oldChiefJudge);
 
+        tournamentRepository.save(tournament);
+    }
+
+    @Transactional
+    public void startTournament(Long tournamentId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+        if (getAuthenticated() != tournament.getChiefJudge()){
+            throw new ApiException("Начать турнир может только главный судья");
+        }
+
+        if (tournament.getTeams().isEmpty() || tournament.getTeams().size() < 2) {
+            throw new ApiException("Недостаточно участников для начала турнира");
+        }
+
+        tournament.setIsStarted(true);
+
+        TournamentStage firstStage = tournament.getStages()
+                .stream()
+                .filter(stage -> stage.getStage() == 0)
+                .findFirst()
+                .orElseThrow(IllegalStateException::new);
+
+        tournamentStageService.distributeTeamsInStage(tournament.getTeams(), firstStage);
         tournamentRepository.save(tournament);
     }
 

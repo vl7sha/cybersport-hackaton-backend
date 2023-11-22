@@ -1,10 +1,10 @@
-package ru.pishemzapuskayem.cybersporthackathonbackend.Model;
+package ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.AbstractEntity;
 
 @Getter
 @Setter

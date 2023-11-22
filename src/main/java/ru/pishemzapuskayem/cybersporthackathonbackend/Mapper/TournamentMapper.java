@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateTournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentShortDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
 
 @Component
 @RequiredArgsConstructor
@@ -14,15 +14,7 @@ public class TournamentMapper {
     private final ModelMapper modelMapper;
 
     public Tournament map(CreateTournamentRequest createTournamentRequest){
-        Tournament tournament = modelMapper.map(createTournamentRequest, Tournament.class);
-
-        tournament.setChiefJudge(null);
-        tournament.setJudges(null);
-        tournament.setChiefSecretary(null);
-        tournament.setSecretaries(null);
-        tournament.setTeams(null);
-        tournament.setMatches(null);
-        return tournament;
+        return modelMapper.map(createTournamentRequest, Tournament.class);
     }
 
     public TournamentShortDTO map(Tournament tournament) {

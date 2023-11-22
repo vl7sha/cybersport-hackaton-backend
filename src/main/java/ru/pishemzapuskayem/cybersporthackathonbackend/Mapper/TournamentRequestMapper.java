@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.TournamentRequest.TournamentRequestDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.TournamentRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentRequest;
 
 @Component
 @RequiredArgsConstructor

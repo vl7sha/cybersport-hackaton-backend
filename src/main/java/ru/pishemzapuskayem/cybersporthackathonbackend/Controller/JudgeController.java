@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Judge.CreateJudgeRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.JudgeMapper;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Role;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.InvitationLinkService;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.JudgeService;
 

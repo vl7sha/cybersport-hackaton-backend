@@ -5,6 +5,7 @@ import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import lombok.Getter;
 import lombok.Setter;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Player;
 
 import java.util.List;
 

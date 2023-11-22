@@ -6,9 +6,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Judge;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Role;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Judge;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Role;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.AccountRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.JudgeRepository;
 
