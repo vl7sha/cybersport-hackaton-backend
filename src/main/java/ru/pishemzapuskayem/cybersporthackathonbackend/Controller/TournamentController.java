@@ -5,7 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.Judge.AddJudgesTournamentRequest;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.CreateTournamentRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateTournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.Judge.DeleteJudgeTournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.Judge.UpdateChiefJudgeTournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.TournamentMapper;
