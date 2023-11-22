@@ -23,6 +23,7 @@ public class TournamentRequestService {
     private final TournamentRequestRepository requestRepository;
     private final TournamentRepository tournamentRepository;
     private final TeamRepository teamRepository;
+    private final MailService mailService;
 
     @Transactional
     public void sendJoinRequest(Long tournamentId, Long teamId) {
@@ -46,7 +47,7 @@ public class TournamentRequestService {
 
         requestRepository.save(joinRequest);
 
-        //todo отправить уведомление на почту главному судье или секретарю или ?????
+        mailService.joinRequestEmail(tournament.getChiefJudge(), tournament, team);
     }
 
     @Transactional
@@ -57,7 +58,7 @@ public class TournamentRequestService {
         request.setIsApproved(true);
         requestRepository.save(request);
 
-        //todo отправить уведомление на почту капитану
+        mailService.captainEmail(request.getTeam().getCaptain(),request.getTournament(), true);
     }
 
     @Transactional
@@ -68,7 +69,7 @@ public class TournamentRequestService {
         request.setIsApproved(false);
         requestRepository.save(request);
 
-        //todo отправить уведомление на почту капитану
+        mailService.captainEmail(request.getTeam().getCaptain(),request.getTournament(), false);
     }
 
     public void tryJoin(Long tournamentId, Long teamId) {

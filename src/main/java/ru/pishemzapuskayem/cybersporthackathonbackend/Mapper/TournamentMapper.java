@@ -10,9 +10,17 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament;
 @RequiredArgsConstructor
 public class TournamentMapper {
 
-    ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
     public Tournament map(CreateTournamentRequest createTournamentRequest){
-        return modelMapper.map(createTournamentRequest, Tournament.class);
+        Tournament tournament = modelMapper.map(createTournamentRequest, Tournament.class);
+
+        tournament.setChiefJudge(null);
+        tournament.setJudges(null);
+        tournament.setChiefSecretary(null);
+        tournament.setSecretaries(null);
+        tournament.setTeams(null);
+        tournament.setMatches(null);
+        return tournament;
     }
 }

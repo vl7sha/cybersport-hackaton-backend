@@ -25,8 +25,6 @@ public class TournamentService {
         tournamentRepository.save(tournament);
     }
 
-
-
     private Judge getAuthenticated() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return judgeRepository.findByEmail(email)

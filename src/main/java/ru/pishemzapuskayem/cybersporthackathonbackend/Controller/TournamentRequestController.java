@@ -15,14 +15,14 @@ public class TournamentRequestController {
 
     //todo получение списка всех запросов с пагинацией отфильтрованному по tournamentId
 
-    @PostMapping("/{requestId}}")
+    @PostMapping("/approve/{requestId}")
     @PreAuthorize("hasRole('JUDGE')")
     public ResponseEntity<Void> approve(@PathVariable Long requestId) {
         service.approveJoinRequest(requestId);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{requestId}}")
+    @PostMapping("/reject/{requestId}")
     @PreAuthorize("hasRole('JUDGE')")
     public ResponseEntity<Void> reject(@PathVariable Long requestId) {
         service.rejectJoinRequest(requestId);

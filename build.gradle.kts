@@ -30,6 +30,7 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-web")
     implementation("com.auth0:java-jwt:4.4.0")
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
+    implementation ("org.springframework.boot:spring-boot-starter-mail:3.0.5")
     implementation ("org.modelmapper:modelmapper:3.1.1")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")

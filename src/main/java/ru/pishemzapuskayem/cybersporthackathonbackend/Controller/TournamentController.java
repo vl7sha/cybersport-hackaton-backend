@@ -14,13 +14,13 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentService;
 @RequestMapping("/api/Tournament")
 public class TournamentController {
 
-    TournamentService tournamentService;
-    TournamentMapper tournamentMapper;
-    TournamentRequestService tournamentRequestService;
+    private final TournamentService tournamentService;
+    private final TournamentMapper tournamentMapper;
+    private final TournamentRequestService tournamentRequestService;
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('JUDGE')")
-    public ResponseEntity<Void> create(@RequestParam CreateTournamentRequest createTournamentRequest){
+    public ResponseEntity<Void> create(@RequestBody CreateTournamentRequest createTournamentRequest) {
         tournamentService.create(tournamentMapper.map(createTournamentRequest));
         return ResponseEntity.ok().build();
     }
