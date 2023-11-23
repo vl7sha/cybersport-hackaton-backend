@@ -1,6 +1,7 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -132,6 +133,15 @@ public class TournamentRequestService {
                 .orElseThrow(() -> new ApiException("Турнир не найден"));
 
         Pageable pageable = PageRequest.of(page.getPage(), page.getItemsPerPage());
-        return requestRepository.findByTournamentAndIsApprovedIsNull(tournament, pageable);
+        Page<TournamentRequest> requests = requestRepository.findByTournamentAndIsApprovedIsNull(tournament, pageable);
+
+        requests.forEach(request -> {
+            Hibernate.initialize(request.getTeam().getCaptain().getContacts());
+            request.getTeam().getPlayers().forEach(
+                    player -> Hibernate.initialize(player.getContacts())
+            );
+        });
+
+        return requests;
     }
 }

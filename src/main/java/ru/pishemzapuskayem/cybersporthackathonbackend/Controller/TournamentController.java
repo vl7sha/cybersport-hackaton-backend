@@ -27,7 +27,6 @@ public class TournamentController {
     private final TournamentRequestService tournamentRequestService;
 
     @GetMapping("/{tournamentId}/current-stage/matches")
-    @PreAuthorize("hasRole('JUDGE')")
     public ResponseEntity<PageDTO<MatchDTO>> getCurrentStageMatches(@PathVariable Long tournamentId, XPage page) {
         Page<MatchDTO> dtos = tournamentService.findCurrentStageMatches(tournamentId, page)
                 .map(matchMapper::map);
@@ -41,7 +40,6 @@ public class TournamentController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('JUDGE')")
     public ResponseEntity<PageDTO<TournamentShortDTO>> getTournaments(XPage page) {
         Page<TournamentShortDTO> dtos = tournamentService.findAllTournaments(page)
                 .map(tournamentMapper::map);
