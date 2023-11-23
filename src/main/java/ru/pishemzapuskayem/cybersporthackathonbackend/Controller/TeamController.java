@@ -6,6 +6,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.CreateTeamRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.GeneratedTeamJoinLinkResponseDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamAccountResponseDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.TeamMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TeamService;
@@ -43,5 +44,14 @@ public class TeamController {
     public ResponseEntity<Void> joinTeam(@RequestParam String token) {
         teamService.joinTeamByToken(token);
         return ResponseEntity.ok().build();
+    }
+
+
+    @GetMapping("/{teamId}")
+    public ResponseEntity<TeamAccountResponseDTO> teamAccount(@PathVariable Long teamId){
+        TeamAccountResponseDTO team = teamMapper.map(
+                teamService.getTeamAccount(teamId)
+        );
+        return ResponseEntity.ok(team);
     }
 }

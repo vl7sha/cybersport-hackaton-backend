@@ -5,11 +5,15 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.CreateTeamRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Player;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentResult;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.PlayerRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TeamRepository;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRepository;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentResultRepository;
 
 import java.util.List;
 import java.util.Objects;
@@ -25,6 +29,8 @@ public class TeamService {
 
     @Value("${urls.frontend.join-team-page}")
     private String frontendJoinTeamPageUrl;
+    private final TournamentRepository tournamentRepository;
+    private final TournamentResultRepository tournamentResultRepository;
 
     @Transactional
     public String createTeam(Team team) {
@@ -88,5 +94,12 @@ public class TeamService {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return playerRepository.findByEmail(email)
                 .orElseThrow(() -> new ApiException("Аккаунт игрока не найден"));
+    }
+
+    public List<TournamentResult> getTeamAccount(Long id) {
+         Team team = teamRepository.findById(id).orElseThrow(() -> new ApiException("Этой команды нет"));
+
+        return tournamentResultRepository.findByTeam(team)
+                 .orElseThrow(()-> new ApiException("Эта команда еще не где не участвовала"));
     }
 }
