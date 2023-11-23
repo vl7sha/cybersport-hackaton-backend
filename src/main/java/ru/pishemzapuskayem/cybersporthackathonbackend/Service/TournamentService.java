@@ -54,9 +54,13 @@ public class TournamentService {
         tournament.setChiefJudge(org);
         tournament.setIsStarted(false);
 
-        //todo если участников мало то этапов может быть меньше
-        List<TournamentStage> stages = tournamentStageService.createEmptyTournamentStages();
-        stages.forEach(stage -> stage.setTournament(tournament));
+        TournamentStage firstStage = tournamentStageService.createTournamentStage(0);
+        firstStage.setTournament(tournament);
+
+        List<TournamentStage> stages = new ArrayList<>();
+        stages.add(firstStage);
+
+        tournament.setCurrentStage(firstStage);
         tournament.setStages(stages);
 
         tournamentRepository.save(tournament);
@@ -177,16 +181,28 @@ public class TournamentService {
         tournamentResultService.saveOrUpdateStageResult(tournament, winnerTeam, winnerScore);
         tournamentResultService.saveOrUpdateStageResult(tournament, loserTeam, loserScore);
 
-        boolean hasNextStage = tournament.getStages().stream()
-                .anyMatch(stage -> stage.getStage() > tournament.getCurrentStage().getStage());
+        if (tournament.getCurrentStage().getMatches().stream().allMatch(m -> m.getWinnerTeam() != null)) {
+            // текущий этап окончен
 
-        //todo может не сразу переходить на следующий этап а делать это по запросу
-        if (hasNextStage) {
-            // переход на следующий этап
-            TournamentStage nextStage = findNextStage(tournament);
-            nextStage.getTeams().add(winnerTeam);
+            List<Team> winners = tournament.getCurrentStage().getMatches().stream()
+                    .map(Match::getWinnerTeam)
+                    .filter(Objects::nonNull)
+                    .toList();
 
-            if (nextStage.getMatches().stream().allMatch(m -> m.getWinnerTeam() != null)) {
+            if (winners.size() == 1) {
+                // закончить турнир
+                tournamentResultService.setTakenPlaces(
+                        List.of(winnerTeam, loserTeam),
+                        tournament
+                );
+            } else {
+                //создать следующий этап и продолжить турнир
+                TournamentStage nextStage = tournamentStageService.createTournamentStage(
+                        tournament.getCurrentStage().getStage() + 1
+                );
+
+                tournamentStageService.createMatchesForStage(winners, nextStage);
+
                 List<Team> teamsNotInNextStage = new ArrayList<>(tournament.getCurrentStage().getTeams());
                 teamsNotInNextStage.removeAll(nextStage.getTeams());
                 tournamentResultService.setTakenPlaces(teamsNotInNextStage, tournament);
@@ -194,12 +210,6 @@ public class TournamentService {
                 tournamentStageService.createMatchesForStage(nextStage.getTeams(), nextStage);
                 tournament.setCurrentStage(nextStage);
             }
-        } else {
-            // закончить турнир
-            tournamentResultService.setTakenPlaces(
-                    List.of(winnerTeam, loserTeam),
-                    tournament
-            );
         }
 
         tournamentRepository.save(tournament);
@@ -295,14 +305,5 @@ public class TournamentService {
                 .filter(stage -> stage.getStage() == 0)
                 .findFirst()
                 .orElseThrow(IllegalStateException::new);
-    }
-
-    private TournamentStage findNextStage(Tournament tournament) {
-        Integer nextStageNumber = tournament.getCurrentStage().getStage() + 1;
-        return tournament.getStages()
-                .stream()
-                .filter(stage -> stage.getStage().equals(nextStageNumber))
-                .findFirst()
-                .orElseThrow(() -> new ApiException("Следующий этап не найден"));
     }
 }

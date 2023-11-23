@@ -31,24 +31,9 @@ public class TournamentStageService {
     }
 
     @Transactional
-    public List<TournamentStage> createEmptyTournamentStages() {
-        List<TournamentStage> stages = new ArrayList<>();
-
-        TournamentStage roundOf16 = new TournamentStage("1/8 финала", 0);
-        stages.add(roundOf16);
-
-        TournamentStage quarterfinals = new TournamentStage("1/4 финала", 1);
-        stages.add(quarterfinals);
-
-        TournamentStage semifinals = new TournamentStage("Полуфинал", 2);
-        stages.add(semifinals);
-
-        TournamentStage finalStage = new TournamentStage("Финал", 3);
-        stages.add(finalStage);
-
-        repository.saveAll(stages);
-
-        return stages;
+    public TournamentStage createTournamentStage(Integer stage) {
+        TournamentStage firstStage = new TournamentStage("Этап " + stage, stage);
+        return repository.save(firstStage);
     }
 
     @Transactional
