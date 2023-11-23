@@ -2,10 +2,8 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
-
-import java.util.Optional;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentStage;
 
 @Repository
-public interface TournamentRepository extends JpaRepository<Tournament, Long> {
+public interface TournamentStageRepository extends JpaRepository<TournamentStage, Long> {
 }

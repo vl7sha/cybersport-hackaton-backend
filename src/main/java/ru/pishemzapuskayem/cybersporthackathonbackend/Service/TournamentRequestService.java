@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.TournamentRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentRequest;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TeamRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRequestRepository;
@@ -22,7 +22,7 @@ import java.util.Optional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class TournamentRequestService {
-    //todo получается только 1 заявка может быть на 1 турнир и если отклоняют то хуй сосёшь
+    //todo получается только 1 заявка может быть на 1 турнир и если отклоняют то больше не попадёшь
 
     private final TournamentRequestRepository requestRepository;
     private final TournamentRepository tournamentRepository;
@@ -33,6 +33,10 @@ public class TournamentRequestService {
     public void sendJoinRequest(Long tournamentId, Long teamId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+        if (tournament.getIsStarted()) {
+            throw new ApiException("Турнир уже начался");
+        }
 
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new ApiException("Команда не найдена"));
@@ -89,6 +93,10 @@ public class TournamentRequestService {
     public void tryJoin(Long tournamentId, Long teamId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+        if (tournament.getIsStarted()) {
+            throw new ApiException("Турнир уже начался");
+        }
 
         Team team = teamRepository.findById(teamId)
                 .orElseThrow(() -> new ApiException("Команда не найдена"));

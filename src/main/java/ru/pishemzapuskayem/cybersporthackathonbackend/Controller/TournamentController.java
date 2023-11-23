@@ -5,6 +5,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateTournamentRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.EndMatchRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.TournamentMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentRequestService;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentService;
@@ -55,8 +56,29 @@ public class TournamentController {
 
     @PatchMapping("/{tournamentId}/judges/{judgeId}")
     @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
-    public ResponseEntity<Void> updateChiefJudges(@PathVariable Long tournamentId, @PathVariable Long judgeId){
+    public ResponseEntity<Void> updateChiefJudge(@PathVariable Long tournamentId, @PathVariable Long judgeId){
         tournamentService.updateChiefJudge(tournamentId, judgeId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{tournamentId}/start")
+    @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
+    public ResponseEntity<Void> startTournament(@PathVariable Long tournamentId) {
+        tournamentService.startTournament(tournamentId);
+        return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/{tournamentId}/matches/{matchId}/winner/{teamId}")
+    @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
+    public ResponseEntity<Void> determineWinner(@RequestBody EndMatchRequestDTO requestDTO) {
+        tournamentService.determineWinner(
+                requestDTO.getTournamentId(),
+                requestDTO.getMatchId(),
+                requestDTO.getWinnerTeamId(),
+                requestDTO.getWinnerScore(),
+                requestDTO.getLoserScore()
+        );
+
         return ResponseEntity.ok().build();
     }
 }

@@ -1,4 +1,4 @@
-package ru.pishemzapuskayem.cybersporthackathonbackend.Model;
+package ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
 
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;

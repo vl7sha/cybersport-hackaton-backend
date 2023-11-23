@@ -5,7 +5,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Players.CreatePlayerRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Players.PlayerDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Player;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Player;
 
 import java.util.List;
 

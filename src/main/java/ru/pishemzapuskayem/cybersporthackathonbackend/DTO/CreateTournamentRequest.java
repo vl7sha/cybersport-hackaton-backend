@@ -1,12 +1,9 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.DTO;
 
-import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
 
 import java.time.LocalDate;
-import java.util.List;
 
 @Getter
 @Setter

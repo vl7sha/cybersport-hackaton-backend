@@ -8,6 +8,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.*;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Account;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Judge;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Player;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
 
 @Service
 @RequiredArgsConstructor

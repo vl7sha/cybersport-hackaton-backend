@@ -4,7 +4,7 @@ import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Account;
 
 
 import java.util.Collection;

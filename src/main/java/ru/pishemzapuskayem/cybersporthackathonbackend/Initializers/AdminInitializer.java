@@ -1,6 +1,5 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Initializers;
 
-import jakarta.persistence.Column;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,11 +8,10 @@ import org.springframework.boot.CommandLineRunner;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Account;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Security.UserDetailsServiceImpl;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.AccountService;
 
-import java.time.LocalDate;
 import java.util.List;
 
 @Component

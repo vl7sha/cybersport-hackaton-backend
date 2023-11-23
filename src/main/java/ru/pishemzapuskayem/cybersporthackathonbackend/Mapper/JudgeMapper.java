@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Judge.CreateJudgeRequestDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Judge;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Judge;
 
 @Component
 @RequiredArgsConstructor
