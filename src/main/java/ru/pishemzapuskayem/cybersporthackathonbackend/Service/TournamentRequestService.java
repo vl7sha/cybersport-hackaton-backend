@@ -68,6 +68,8 @@ public class TournamentRequestService {
                 .orElseThrow(() -> new ApiException("Запрос не найден"));
 
         request.setIsApproved(true);
+        request.getTournament().getTeams().add(request.getTeam());
+        tournamentRepository.save(request.getTournament());
         requestRepository.save(request);
 
         mailService.sendRequestApprovedNotification(
