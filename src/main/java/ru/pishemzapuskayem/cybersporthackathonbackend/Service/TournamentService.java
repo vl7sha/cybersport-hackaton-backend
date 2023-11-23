@@ -6,6 +6,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Judge;
@@ -204,24 +205,36 @@ public class TournamentService {
                 // оценить результаты проигравших
                 List<Team> teamsNotInNextStage = new ArrayList<>(tournament.getCurrentStage().getTeams());
                 teamsNotInNextStage.removeAll(winners);
-
                 tournamentResultService.setTakenPlaces(teamsNotInNextStage, tournament);
 
                 //создать следующий этап и продолжить турнир
-                TournamentStage nextStage = tournamentStageService.createTournamentStage(
-                        tournament.getCurrentStage().getStage() + 1,
-                        tournament
-                );
+                deleteTeamsInStage(tournament.getCurrentStage(), winners);
 
-                tournament.getStages().add(nextStage);
-                tournament.getCurrentStage().getTeams().removeAll(winners);
-                tournamentStageService.createMatchesForStage(winners, nextStage);
-                tournamentStageService.createMatchesForStage(nextStage.getTeams(), nextStage);
+                TournamentStage nextStage = createNextStage(tournament, winners);
                 tournament.setCurrentStage(nextStage);
             }
         }
 
         tournamentRepository.save(tournament);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public TournamentStage createNextStage(Tournament tournament, List<Team> participants) {
+        TournamentStage nextStage = tournamentStageService.createTournamentStage(
+                tournament.getCurrentStage().getStage() + 1,
+                tournament
+        );
+
+        tournament.getStages().add(nextStage);
+        tournamentStageService.createMatchesForStage(participants, nextStage);
+        tournamentStageService.createMatchesForStage(nextStage.getTeams(), nextStage);
+
+        return nextStage;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    public void deleteTeamsInStage(TournamentStage currentStage, List<Team> toRemove) {
+        currentStage.getTeams().removeAll(toRemove);
     }
 
     public void addSecretary(Long tournamentId, Long secretariesId) {
