@@ -201,6 +201,12 @@ public class TournamentService {
                         tournament
                 );
             } else {
+                // оценить результаты проигравших
+                List<Team> teamsNotInNextStage = new ArrayList<>(tournament.getCurrentStage().getTeams());
+                teamsNotInNextStage.removeAll(winners);
+
+                tournamentResultService.setTakenPlaces(teamsNotInNextStage, tournament);
+
                 //создать следующий этап и продолжить турнир
                 TournamentStage nextStage = tournamentStageService.createTournamentStage(
                         tournament.getCurrentStage().getStage() + 1,
@@ -208,18 +214,8 @@ public class TournamentService {
                 );
 
                 tournament.getStages().add(nextStage);
-
-
-                tournamentStageService.createMatchesForStage(winners, nextStage);
-
-
-                List<Team> teamsNotInNextStage = new ArrayList<>(tournament.getCurrentStage().getTeams());
-                teamsNotInNextStage.removeAll(winners);
-
                 tournament.getCurrentStage().getTeams().removeAll(winners);
-
-                tournamentResultService.setTakenPlaces(teamsNotInNextStage, tournament);
-
+                tournamentStageService.createMatchesForStage(winners, nextStage);
                 tournamentStageService.createMatchesForStage(nextStage.getTeams(), nextStage);
                 tournament.setCurrentStage(nextStage);
             }
