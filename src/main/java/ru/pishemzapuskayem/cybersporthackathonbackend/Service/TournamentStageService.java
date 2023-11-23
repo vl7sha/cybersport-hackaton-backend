@@ -1,12 +1,17 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Match;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentStage;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.MatchRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentStageRepository;
+import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,6 +23,12 @@ import java.util.List;
 public class TournamentStageService {
 
     private final TournamentStageRepository repository;
+    private final MatchRepository matchRepository;
+
+    public Page<Match> findCurrentStageMatches(TournamentStage currentStage, XPage page) {
+        Pageable pageable = PageRequest.of(page.getPage(), page.getItemsPerPage());
+        return matchRepository.findByTournamentStage(currentStage, pageable);
+    }
 
     @Transactional
     public List<TournamentStage> createEmptyTournamentStages() {

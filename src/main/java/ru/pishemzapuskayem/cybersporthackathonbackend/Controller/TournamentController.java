@@ -1,12 +1,18 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateTournamentRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Matches.MatchDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Pagination.PageDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.EndMatchRequestDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentShortDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.MatchMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.TournamentMapper;
+import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentRequestService;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentService;
 
@@ -17,7 +23,36 @@ public class TournamentController {
 
     private final TournamentService tournamentService;
     private final TournamentMapper tournamentMapper;
+    private final MatchMapper matchMapper;
     private final TournamentRequestService tournamentRequestService;
+
+    @GetMapping("/{tournamentId}/current-stage/matches")
+    @PreAuthorize("hasRole('JUDGE')")
+    public ResponseEntity<PageDTO<MatchDTO>> getCurrentStageMatches(@PathVariable Long tournamentId, XPage page) {
+        Page<MatchDTO> dtos = tournamentService.findCurrentStageMatches(tournamentId, page)
+                .map(matchMapper::map);
+
+        return ResponseEntity.ok(
+                new PageDTO<>(
+                        dtos.getContent(),
+                        dtos.getTotalElements()
+                )
+        );
+    }
+
+    @GetMapping
+    @PreAuthorize("hasRole('JUDGE')")
+    public ResponseEntity<PageDTO<TournamentShortDTO>> getTournaments(XPage page) {
+        Page<TournamentShortDTO> dtos = tournamentService.findAllTournaments(page)
+                .map(tournamentMapper::map);
+
+        return ResponseEntity.ok(
+                new PageDTO<>(
+                        dtos.getContent(),
+                        dtos.getTotalElements()
+                )
+        );
+    }
 
     @PostMapping("/create")
     @PreAuthorize("hasRole('JUDGE')")
@@ -95,12 +130,13 @@ public class TournamentController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{tournamentId}/matches/{matchId}/winner/{teamId}")
+    @PostMapping("/{tournamentId}/matches/{matchId}")
     @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
-    public ResponseEntity<Void> determineWinner(@RequestBody EndMatchRequestDTO requestDTO) {
+    public ResponseEntity<Void> determineWinner(@PathVariable Long tournamentId, @PathVariable Long matchId,
+                                                @RequestBody EndMatchRequestDTO requestDTO) {
         tournamentService.determineWinner(
-                requestDTO.getTournamentId(),
-                requestDTO.getMatchId(),
+                tournamentId,
+                matchId,
                 requestDTO.getWinnerTeamId(),
                 requestDTO.getWinnerScore(),
                 requestDTO.getLoserScore()
