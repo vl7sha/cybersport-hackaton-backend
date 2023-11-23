@@ -26,6 +26,7 @@ public class TournamentStage extends AbstractEntity {
     @OneToMany(mappedBy = "tournamentStage")
     private List<Match> matches;
 
+    // кишки наружу не брать
     @ManyToMany
     private List<Team> teams;
 

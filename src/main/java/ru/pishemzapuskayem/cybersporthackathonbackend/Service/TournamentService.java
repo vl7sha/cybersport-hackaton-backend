@@ -212,8 +212,12 @@ public class TournamentService {
 
                 tournamentStageService.createMatchesForStage(winners, nextStage);
 
+
                 List<Team> teamsNotInNextStage = new ArrayList<>(tournament.getCurrentStage().getTeams());
-                teamsNotInNextStage.removeAll(nextStage.getTeams());
+                teamsNotInNextStage.removeAll(winners);
+
+                tournament.getCurrentStage().getTeams().removeAll(winners);
+
                 tournamentResultService.setTakenPlaces(teamsNotInNextStage, tournament);
 
                 tournamentStageService.createMatchesForStage(nextStage.getTeams(), nextStage);
