@@ -23,7 +23,7 @@ public class TournamentStage extends AbstractEntity {
     @ManyToOne
     private Tournament tournament;
 
-    @OneToMany(mappedBy = "stage")
+    @OneToMany(mappedBy = "tournamentStage")
     private List<Match> matches;
 
     @ManyToMany
