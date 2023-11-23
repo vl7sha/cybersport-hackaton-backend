@@ -41,14 +41,14 @@ public class TournamentStageService {
     }
 
     @Transactional
-    public void distributeTeamsInStage(List<Team> teams, TournamentStage stage) {
+    public void createMatchesForStage(List<Team> teams, TournamentStage stage) {
         stage.setTeams(teams);
 
         List<Team> shuffledTeams = new ArrayList<>(teams);
         Collections.shuffle(shuffledTeams);
 
         if (shuffledTeams.size() % 2 != 0) {
-            Match byeMatch = createFakeMatch(shuffledTeams.get(shuffledTeams.size() - 1), stage);
+            Match byeMatch = createByeMatch(shuffledTeams.get(shuffledTeams.size() - 1), stage);
             stage.getMatches().add(byeMatch);
             shuffledTeams.remove(shuffledTeams.size() - 1);
         }
@@ -61,7 +61,7 @@ public class TournamentStageService {
         repository.save(stage);
     }
 
-    private Match createFakeMatch(Team luckyBastards, TournamentStage stage) {
+    private Match createByeMatch(Team luckyBastards, TournamentStage stage) {
         Match byeMatch = new Match();
         byeMatch.setTeam1(luckyBastards);
         byeMatch.setTeam2(null);

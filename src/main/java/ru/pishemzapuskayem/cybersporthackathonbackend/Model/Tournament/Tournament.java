@@ -26,6 +26,9 @@ public class Tournament extends AbstractEntity {
     private String organizer;
     private Boolean isStarted;
 
+    // поле для подсчёта какие места занимают команды в конце этапа это кишки
+    private Integer lastTakenPlace;
+
     @ManyToMany
     private List<Team> teams;
 
@@ -35,15 +38,22 @@ public class Tournament extends AbstractEntity {
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
     private List<TournamentStage> stages;
 
+    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
+    private List<TournamentResult> results;
+
+    //todo скорее всего конфликт проверить и обозначить поля явно если конфликт
     @ManyToOne
     private Judge chiefJudge;
 
+    //todo скорее всего конфликт
     @ManyToOne
     private Judge chiefSecretary;
 
+    //todo скорее всего конфликт
     @ManyToMany
     private List<Judge> judges;
 
+    //todo скорее всего конфликт
     @ManyToMany
     private List<Judge> secretaries;
 }
