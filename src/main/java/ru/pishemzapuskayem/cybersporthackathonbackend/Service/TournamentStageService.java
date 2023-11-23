@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Match;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentStage;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.MatchRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentStageRepository;
@@ -31,9 +32,10 @@ public class TournamentStageService {
     }
 
     @Transactional
-    public TournamentStage createTournamentStage(Integer stage) {
-        TournamentStage firstStage = new TournamentStage("Этап " + stage, stage);
-        return repository.save(firstStage);
+    public TournamentStage createTournamentStage(Integer stage, Tournament tournament) {
+        TournamentStage newStage = new TournamentStage("Этап " + stage, stage);
+        newStage.setTournament(tournament);
+        return repository.save(newStage);
     }
 
     @Transactional

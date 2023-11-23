@@ -17,6 +17,7 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.JudgeRepository
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -54,7 +55,7 @@ public class TournamentService {
         tournament.setChiefJudge(org);
         tournament.setIsStarted(false);
 
-        TournamentStage firstStage = tournamentStageService.createTournamentStage(0);
+        TournamentStage firstStage = tournamentStageService.createTournamentStage(0, tournament);
         firstStage.setTournament(tournament);
 
         List<TournamentStage> stages = new ArrayList<>();
@@ -142,6 +143,10 @@ public class TournamentService {
             throw new ApiException("Недостаточно участников для начала турнира");
         }
 
+        if (!LocalDate.now().isEqual(tournament.getStartDate())) {
+            throw new ApiException("Неверная дата начала турнира");
+        }
+
         tournament.setIsStarted(true);
         TournamentStage firstStage = findFirstStage(tournament);
         tournament.setCurrentStage(firstStage);
@@ -198,8 +203,12 @@ public class TournamentService {
             } else {
                 //создать следующий этап и продолжить турнир
                 TournamentStage nextStage = tournamentStageService.createTournamentStage(
-                        tournament.getCurrentStage().getStage() + 1
+                        tournament.getCurrentStage().getStage() + 1,
+                        tournament
                 );
+
+                tournament.getStages().add(nextStage);
+
 
                 tournamentStageService.createMatchesForStage(winners, nextStage);
 
