@@ -36,6 +36,18 @@ public class TournamentService {
         return tournamentRepository.findAll(pageable);
     }
 
+    public Page<Match> findCurrentStageMatches(Long tournamentId, XPage page) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+        TournamentStage currentStage = tournament.getCurrentStage();
+        if (currentStage == null) {
+            throw new ApiException("Текущий этап не установлен для турнира");
+        }
+
+        return tournamentStageService.findCurrentStageMatches(currentStage, page);
+    }
+
     @Transactional
     public void create(Tournament tournament){
         Judge org = getAuthenticated();
