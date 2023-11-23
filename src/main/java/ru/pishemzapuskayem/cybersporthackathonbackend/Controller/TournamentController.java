@@ -67,17 +67,16 @@ public class TournamentController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{tournamentId}/judges/{secretariesId}")
-    @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
-    public ResponseEntity<Void> addChiefSecretary(@PathVariable Long tournamentId, @PathVariable Long secretariesId){
-        tournamentService.addChiefSecretary(tournamentId, secretariesId);
-        return ResponseEntity.ok().build();
-    }
-
     @PutMapping("/{tournamentId}/judges/{secretariesId}")
     @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
     public ResponseEntity<Void> updateChiefSecretary(@PathVariable Long tournamentId, @PathVariable Long secretariesId){
         tournamentService.updateChiefSecretary(tournamentId, secretariesId);
+        return ResponseEntity.ok().build();
+    }
+    @PostMapping("/{tournamentId}/judges/{secretariesId}")
+    @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
+    public ResponseEntity<Void> addChiefSecretary(@PathVariable Long tournamentId, @PathVariable Long secretariesId){
+        tournamentService.addChiefSecretary(tournamentId, secretariesId);
         return ResponseEntity.ok().build();
     }
 
