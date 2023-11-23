@@ -8,11 +8,7 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 @Getter
 @Setter
 public class TournamentResultDTO {
-
     private TournamentRequestDTO tournament;
-
-    //нужен для подсчёта занятого места внутри этапа (если команда не прошла дальше) это кишки
-    private Integer score;
 
     private Integer takenPlace;
 }
