@@ -54,9 +54,7 @@ public class TournamentService {
             Hibernate.initialize(tournament.getCurrentStage().getMatches());
         }
 
-        tournament.getStages().forEach((stage) -> {
-            Hibernate.initialize(stage.getMatches());
-        });
+        tournament.getStages().forEach((stage) -> Hibernate.initialize(stage.getMatches()));
 
         Hibernate.initialize(tournament.getResults());
 
