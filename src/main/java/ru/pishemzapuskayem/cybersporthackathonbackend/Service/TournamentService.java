@@ -73,7 +73,18 @@ public class TournamentService {
             throw new ApiException("Текущий этап не установлен для турнира");
         }
 
-        return tournamentStageService.findCurrentStageMatches(currentStage, page);
+        Page<Match> matches = tournamentStageService.findCurrentStageMatches(currentStage, page);
+
+        matches.forEach(match -> {
+            if (match.getWinnerTeam() != null) {
+                Hibernate.initialize(match.getWinnerTeam().getPlayers());
+            }
+
+            Hibernate.initialize(match.getTeam1().getPlayers());
+            Hibernate.initialize(match.getTeam2().getPlayers());
+        });
+
+        return matches;
     }
 
     @Transactional
