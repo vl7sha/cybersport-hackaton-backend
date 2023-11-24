@@ -1,14 +1,19 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Controller;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Matches.MatchDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Pagination.PageDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.CreateTeamRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.GeneratedTeamJoinLinkResponseDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamAccountResponseDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.TeamMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
+import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TeamService;
 
 @RestController
@@ -18,6 +23,19 @@ public class TeamController {
 
     private final TeamService teamService;
     private final TeamMapper teamMapper;
+
+    @GetMapping
+    public ResponseEntity<PageDTO<TeamDTO>> getTeams(XPage page) {
+        Page<TeamDTO> dtos = teamService.getTeams(page)
+                .map(teamMapper::map);
+
+        return ResponseEntity.ok(
+                new PageDTO<>(
+                        dtos.getContent(),
+                        dtos.getTotalElements()
+                )
+        );
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('CAPTAIN') or hasRole('PLAYER')")

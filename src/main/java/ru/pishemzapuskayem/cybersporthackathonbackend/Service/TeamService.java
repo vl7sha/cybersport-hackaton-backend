@@ -1,7 +1,11 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,6 +18,7 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.PlayerRepositor
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TeamRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentResultRepository;
+import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
 
 import java.util.List;
 import java.util.Objects;
@@ -101,5 +106,17 @@ public class TeamService {
 
         return tournamentResultRepository.findByTeam(team)
                  .orElseThrow(()-> new ApiException("Эта команда еще не где не участвовала"));
+    }
+
+    public Page<Team> getTeams(XPage page) {
+        Pageable pageable = PageRequest.of(page.getPage(), page.getItemsPerPage());
+        Page<Team> teams = teamRepository.findAll(pageable);
+
+        teams.forEach(t-> {
+            Hibernate.initialize(t.getPlayers());
+            Hibernate.initialize(t.getResults());
+        });
+
+        return teams;
     }
 }
