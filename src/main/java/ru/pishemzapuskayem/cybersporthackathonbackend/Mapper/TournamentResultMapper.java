@@ -3,7 +3,7 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentResultDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentResultShortDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentResult;
 
 import java.util.List;
@@ -14,11 +14,13 @@ public class TournamentResultMapper {
 
     private final ModelMapper modelMapper;
 
-    public TournamentResultDTO map(TournamentResult tournamentResult) {
-        return modelMapper.map(tournamentResult, TournamentResultDTO.class);
+    public TournamentResultShortDTO map(TournamentResult tournamentResult) {
+        TournamentResultShortDTO dto = modelMapper.map(tournamentResult, TournamentResultShortDTO.class);
+        dto.setTeamId(tournamentResult.getTournament().getId());
+        return dto;
     }
 
-    public List<TournamentResultDTO> map(List<TournamentResult> tournamentResults) {
+    public List<TournamentResultShortDTO> map(List<TournamentResult> tournamentResults) {
         return tournamentResults.stream().map(this::map).toList();
     }
 }

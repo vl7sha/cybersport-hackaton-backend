@@ -1,6 +1,8 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Service;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -24,6 +26,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -37,6 +40,32 @@ public class TournamentService {
     public Page<Tournament> findAllTournaments(XPage page) {
         Pageable pageable = PageRequest.of(page.getPage(), page.getItemsPerPage());
         return tournamentRepository.findAll(pageable);
+    }
+
+    public Tournament findById(Long tournamentId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+
+        tournament.getTeams().forEach(team -> {
+            Hibernate.initialize(team.getPlayers());
+            Hibernate.initialize(team.getResults());
+        });
+
+        if (tournament.getCurrentStage() != null) {
+            Hibernate.initialize(tournament.getCurrentStage().getMatches());
+        }
+
+        tournament.getStages().forEach((stage) -> {
+            Hibernate.initialize(stage.getMatches());
+        });
+
+        Hibernate.initialize(tournament.getResults());
+
+        Hibernate.initialize(tournament.getJudges());
+        Hibernate.initialize(tournament.getSecretaries());
+
+        return tournament;
     }
 
     public Page<Match> findCurrentStageMatches(Long tournamentId, XPage page) {
@@ -152,6 +181,10 @@ public class TournamentService {
         tournament.setIsStarted(true);
         TournamentStage firstStage = findFirstStage(tournament);
         tournament.setCurrentStage(firstStage);
+
+        //todo
+        log.info("текущий этап {}", tournament.getCurrentStage().getName());
+        log.info("команд в нём {}", tournament.getTeams().size());
 
         //todo эта штука работает вообще?
         tournamentStageService.createMatchesForStage(tournament.getTeams(), firstStage);

@@ -6,11 +6,9 @@ import org.springframework.stereotype.Component;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.CreateTeamRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamAccountResponseDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentResultDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentResult;
 
-import java.util.Collections;
 import java.util.List;
 
 @Component
