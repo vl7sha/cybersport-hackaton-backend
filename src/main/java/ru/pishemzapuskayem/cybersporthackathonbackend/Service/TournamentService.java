@@ -1,7 +1,6 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -26,7 +25,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-@Slf4j
 @Service
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
@@ -182,11 +180,6 @@ public class TournamentService {
         TournamentStage firstStage = findFirstStage(tournament);
         tournament.setCurrentStage(firstStage);
 
-        //todo
-        log.info("текущий этап {}", tournament.getCurrentStage().getName());
-        log.info("команд в нём {}", tournament.getTeams().size());
-
-        //todo эта штука работает вообще?
         tournamentStageService.createMatchesForStage(tournament.getTeams(), firstStage);
         tournamentRepository.save(tournament);
     }

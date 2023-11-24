@@ -63,11 +63,14 @@ public class TournamentStageService {
             shuffledTeams.remove(shuffledTeams.size() - 1);
         }
 
+        List<Match> toSave = new ArrayList<>();
         for (int i = 0; i < shuffledTeams.size(); i += 2) {
             Match match = createMatch(shuffledTeams.get(i), shuffledTeams.get(i + 1), stage);
             stage.getMatches().add(match);
+            toSave.add(match);
         }
 
+        matchRepository.saveAll(toSave);
         repository.save(stage);
     }
 
