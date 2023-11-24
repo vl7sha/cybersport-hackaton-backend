@@ -237,7 +237,7 @@ public class TournamentService {
         currentStage.getTeams().removeAll(toRemove);
     }
 
-    public void addSecretary(Long tournamentId, Long secretariesId) {
+    public void addSecretary(Long tournamentId, Long secretaryId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new ApiException("Турнир не найден"));
 
@@ -245,14 +245,14 @@ public class TournamentService {
             throw new ApiException("Вы не можете добавлять секретарей");
         }
 
-        Judge judge = judgeRepository.findById(secretariesId)
+        Judge secretary = judgeRepository.findById(secretaryId)
                 .orElseThrow(() -> new ApiException("Аккаунт не найден"));
 
-        if (tournament.getSecretaries().contains(judge)){
+        if (tournament.getSecretaries().contains(secretary)){
             throw new ApiException("Такой секретарь уже есть");
         }
 
-        tournament.getSecretaries().add(judge);
+        tournament.getSecretaries().add(secretary);
         tournamentRepository.save(tournament);
     }
 

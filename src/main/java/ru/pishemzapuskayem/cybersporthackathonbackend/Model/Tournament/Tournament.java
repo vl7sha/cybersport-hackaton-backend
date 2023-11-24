@@ -46,7 +46,7 @@ public class Tournament extends AbstractEntity {
     private Judge chiefJudge;
 
     //todo скорее всего конфликт
-    @ManyToOne
+    @ManyToOne(targetEntity = Judge.class, fetch = FetchType.EAGER)
     private Judge chiefSecretary;
 
     //todo скорее всего конфликт

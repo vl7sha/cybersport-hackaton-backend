@@ -82,44 +82,44 @@ public class TournamentController {
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{tournamentId}/judges/{judgeId}")
+    @DeleteMapping("/{tournamentId}/judges")
     @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteJudge(@PathVariable Long tournamentId, @PathVariable Long judgeId) {
+    public ResponseEntity<Void> deleteJudge(@PathVariable Long tournamentId, @RequestParam Long judgeId) {
         tournamentService.removeJudge(tournamentId, judgeId);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{tournamentId}/secretary/{secretaryId}")
+    @PostMapping("/{tournamentId}/secretary")
     @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
-    public ResponseEntity<Void> addSecretary(@PathVariable Long tournamentId, @PathVariable Long secretaryId) {
+    public ResponseEntity<Void> addSecretary(@PathVariable Long tournamentId, @RequestParam Long secretaryId) {
         tournamentService.addSecretary(tournamentId, secretaryId);
         return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/{tournamentId}/secretary/{secretaryId}")
+    @DeleteMapping("/{tournamentId}/secretary")
     @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
-    public ResponseEntity<Void> deleteSecretary(@PathVariable Long tournamentId, @PathVariable Long secretaryId) {
+    public ResponseEntity<Void> deleteSecretary(@PathVariable Long tournamentId, @RequestParam Long secretaryId) {
         tournamentService.removeSecretary(tournamentId, secretaryId);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{tournamentId}/chief/secretary/{secretariesId}")
+    @PatchMapping("/{tournamentId}/chief/secretary")
     @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
-    public ResponseEntity<Void> updateChiefSecretary(@PathVariable Long tournamentId, @PathVariable Long secretariesId) {
-        tournamentService.updateChiefSecretary(tournamentId, secretariesId);
+    public ResponseEntity<Void> updateChiefSecretary(@PathVariable Long tournamentId, @RequestParam Long secretaryId){
+        tournamentService.updateChiefSecretary(tournamentId, secretaryId);
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/{tournamentId}/chief/secretary/{secretariesId}")
+    @PostMapping("/{tournamentId}/chief/secretary")
     @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
-    public ResponseEntity<Void> addChiefSecretary(@PathVariable Long tournamentId, @PathVariable Long secretariesId) {
-        tournamentService.addChiefSecretary(tournamentId, secretariesId);
+    public ResponseEntity<Void> addChiefSecretary(@PathVariable Long tournamentId, @RequestParam Long secretaryId) {
+        tournamentService.addChiefSecretary(tournamentId, secretaryId);
         return ResponseEntity.ok().build();
     }
 
-    @PatchMapping("/{tournamentId}/chief/judges/{judgeId}")
+    @PatchMapping("/{tournamentId}/chief/judges")
     @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
-    public ResponseEntity<Void> updateChiefJudge(@PathVariable Long tournamentId, @PathVariable Long judgeId) {
+    public ResponseEntity<Void> updateChiefJudge(@PathVariable Long tournamentId, @RequestParam Long judgeId) {
         tournamentService.updateChiefJudge(tournamentId, judgeId);
         return ResponseEntity.ok().build();
     }
