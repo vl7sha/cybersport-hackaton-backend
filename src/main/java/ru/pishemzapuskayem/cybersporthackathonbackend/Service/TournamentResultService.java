@@ -8,6 +8,7 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournamen
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentResult;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentResultRepository;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -34,6 +35,12 @@ public class TournamentResultService {
             result.setTeam(team);
             result.setScore(score);
             result.setTakenPlace(null);
+
+            if (tournament.getResults() == null) {
+                tournament.setResults(new ArrayList<>());
+            }
+
+            tournament.getResults().add(result);
         }
 
         resultRepository.save(result);
@@ -50,7 +57,11 @@ public class TournamentResultService {
                 ? tournament.getTeams().size() + 1 : tournament.getLastTakenPlace();
 
         for (int i = 0; i < sortedTeams.size(); i++) {
-            lastTakenPlace = lastTakenPlace - (i + 1);
+            if (i == 0) {
+                lastTakenPlace = lastTakenPlace - (i + 1);
+            } else {
+                lastTakenPlace = lastTakenPlace - i;
+            }
 
             TournamentResult result = resultsMap.get(sortedTeams.get(i));
             result.setTakenPlace(lastTakenPlace);

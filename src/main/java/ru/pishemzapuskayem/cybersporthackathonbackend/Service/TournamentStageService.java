@@ -41,7 +41,6 @@ public class TournamentStageService {
         return repository.save(newStage);
     }
 
-    //todo эта штука работает вообще?
     @Transactional
     public void createMatchesForStage(List<Team> teams, TournamentStage stage) {
         List<TournamentStageTeam> tournamentStageTeams = new ArrayList<>();
