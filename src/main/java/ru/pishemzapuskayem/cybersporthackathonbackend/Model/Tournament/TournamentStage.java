@@ -1,14 +1,12 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament;
 
 import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.AbstractEntity;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 
 import java.util.List;
 
@@ -26,9 +24,8 @@ public class TournamentStage extends AbstractEntity {
     @OneToMany(mappedBy = "tournamentStage")
     private List<Match> matches;
 
-    // кишки наружу не брать
-    @ManyToMany
-    private List<Team> teams;
+    @OneToMany
+    private List<TournamentStageTeam> teams;
 
     public TournamentStage(String name, Integer stage) {
         this.name = name;

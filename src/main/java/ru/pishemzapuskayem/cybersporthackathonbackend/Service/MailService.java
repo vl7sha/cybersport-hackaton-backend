@@ -76,5 +76,4 @@ public class MailService {
                 "Ваша заявка на турнир " + tournament.getName() + " была отклонена"+
                 "</div>";
     }
-
 }

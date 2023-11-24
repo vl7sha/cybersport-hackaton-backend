@@ -41,19 +41,15 @@ public class Tournament extends AbstractEntity {
     @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
     private List<TournamentResult> results;
 
-    //todo скорее всего конфликт проверить и обозначить поля явно если конфликт
     @ManyToOne
     private Judge chiefJudge;
 
-    //todo скорее всего конфликт
     @ManyToOne
     private Judge chiefSecretary;
 
-    //todo скорее всего конфликт
     @ManyToMany
     private List<Judge> judges;
 
-    //todo скорее всего конфликт
     @ManyToMany
     private List<Judge> secretaries;
 }

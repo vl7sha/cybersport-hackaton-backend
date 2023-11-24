@@ -16,7 +16,10 @@ public class MatchMapper {
         MatchDTO dto = modelMapper.map(match, MatchDTO.class);
         dto.setTeam1(teamMapper.map(match.getTeam1()));
         dto.setTeam2(teamMapper.map(match.getTeam2()));
-        dto.setWinnerTeam(teamMapper.map(match.getWinnerTeam()));
+
+        if (match.getWinnerTeam() != null) {
+            dto.setWinnerTeam(teamMapper.map(match.getWinnerTeam()));
+        }
 
         return dto;
     }

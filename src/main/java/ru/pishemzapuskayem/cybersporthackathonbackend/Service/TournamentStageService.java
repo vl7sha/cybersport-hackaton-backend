@@ -10,8 +10,10 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Match;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentStage;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentStageTeam;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.MatchRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentStageRepository;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentStageTeamRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ public class TournamentStageService {
 
     private final TournamentStageRepository repository;
     private final MatchRepository matchRepository;
+    private final TournamentStageTeamRepository stageTeamRepository;
 
     public Page<Match> findCurrentStageMatches(TournamentStage currentStage, XPage page) {
         Pageable pageable = PageRequest.of(page.getPage(), page.getItemsPerPage());
@@ -38,9 +41,18 @@ public class TournamentStageService {
         return repository.save(newStage);
     }
 
+    //todo эта штука работает вообще?
     @Transactional
     public void createMatchesForStage(List<Team> teams, TournamentStage stage) {
-        stage.setTeams(teams);
+        List<TournamentStageTeam> tournamentStageTeams = new ArrayList<>();
+        for (Team team : teams) {
+            TournamentStageTeam stageTeam = new TournamentStageTeam();
+            stageTeam.setTeam(team);
+            stageTeam.setTournamentStage(stage);
+            tournamentStageTeams.add(stageTeam);
+        }
+        stageTeamRepository.saveAll(tournamentStageTeams);
+        stage.setTeams(tournamentStageTeams);
 
         List<Team> shuffledTeams = new ArrayList<>(teams);
         Collections.shuffle(shuffledTeams);
@@ -51,11 +63,14 @@ public class TournamentStageService {
             shuffledTeams.remove(shuffledTeams.size() - 1);
         }
 
+        List<Match> toSave = new ArrayList<>();
         for (int i = 0; i < shuffledTeams.size(); i += 2) {
             Match match = createMatch(shuffledTeams.get(i), shuffledTeams.get(i + 1), stage);
             stage.getMatches().add(match);
+            toSave.add(match);
         }
 
+        matchRepository.saveAll(toSave);
         repository.save(stage);
     }
 

@@ -1,12 +1,12 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Service;
 
 import lombok.RequiredArgsConstructor;
+import org.hibernate.Hibernate;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Judge;
@@ -14,6 +14,7 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Match;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentStage;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentStageTeam;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.JudgeRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
@@ -22,6 +23,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -38,6 +40,30 @@ public class TournamentService {
         return tournamentRepository.findAll(pageable);
     }
 
+    public Tournament findById(Long tournamentId) {
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+
+        tournament.getTeams().forEach(team -> {
+            Hibernate.initialize(team.getPlayers());
+            Hibernate.initialize(team.getResults());
+        });
+
+        if (tournament.getCurrentStage() != null) {
+            Hibernate.initialize(tournament.getCurrentStage().getMatches());
+        }
+
+        tournament.getStages().forEach((stage) -> Hibernate.initialize(stage.getMatches()));
+
+        Hibernate.initialize(tournament.getResults());
+
+        Hibernate.initialize(tournament.getJudges());
+        Hibernate.initialize(tournament.getSecretaries());
+
+        return tournament;
+    }
+
     public Page<Match> findCurrentStageMatches(Long tournamentId, XPage page) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new ApiException("Турнир не найден"));
@@ -47,7 +73,18 @@ public class TournamentService {
             throw new ApiException("Текущий этап не установлен для турнира");
         }
 
-        return tournamentStageService.findCurrentStageMatches(currentStage, page);
+        Page<Match> matches = tournamentStageService.findCurrentStageMatches(currentStage, page);
+
+        matches.forEach(match -> {
+            if (match.getWinnerTeam() != null) {
+                Hibernate.initialize(match.getWinnerTeam().getPlayers());
+            }
+
+            Hibernate.initialize(match.getTeam1().getPlayers());
+            Hibernate.initialize(match.getTeam2().getPlayers());
+        });
+
+        return matches;
     }
 
     @Transactional
@@ -203,38 +240,27 @@ public class TournamentService {
                 );
             } else {
                 // оценить результаты проигравших
-                List<Team> teamsNotInNextStage = new ArrayList<>(tournament.getCurrentStage().getTeams());
+                List<Team> teamsNotInNextStage = tournament.getCurrentStage().getTeams()
+                        .stream()
+                        .map(TournamentStageTeam::getTeam)
+                        .collect(Collectors.toList());
+
                 teamsNotInNextStage.removeAll(winners);
                 tournamentResultService.setTakenPlaces(teamsNotInNextStage, tournament);
 
                 //создать следующий этап и продолжить турнир
-                deleteTeamsInStage(tournament.getCurrentStage(), winners);
+                TournamentStage nextStage = tournamentStageService.createTournamentStage(
+                        tournament.getCurrentStage().getStage() + 1,
+                        tournament
+                );
+                tournament.getStages().add(nextStage);
+                tournamentStageService.createMatchesForStage(winners, nextStage);
 
-                TournamentStage nextStage = createNextStage(tournament, winners);
                 tournament.setCurrentStage(nextStage);
             }
         }
 
         tournamentRepository.save(tournament);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public TournamentStage createNextStage(Tournament tournament, List<Team> participants) {
-        TournamentStage nextStage = tournamentStageService.createTournamentStage(
-                tournament.getCurrentStage().getStage() + 1,
-                tournament
-        );
-
-        tournament.getStages().add(nextStage);
-        tournamentStageService.createMatchesForStage(participants, nextStage);
-        tournamentStageService.createMatchesForStage(nextStage.getTeams(), nextStage);
-
-        return nextStage;
-    }
-
-    @Transactional(propagation = Propagation.REQUIRES_NEW)
-    public void deleteTeamsInStage(TournamentStage currentStage, List<Team> toRemove) {
-        currentStage.getTeams().removeAll(toRemove);
     }
 
     public void addSecretary(Long tournamentId, Long secretariesId) {

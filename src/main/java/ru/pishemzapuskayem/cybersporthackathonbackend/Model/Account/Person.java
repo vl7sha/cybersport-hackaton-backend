@@ -1,6 +1,7 @@
 package ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account;
 
 import jakarta.persistence.ElementCollection;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.MappedSuperclass;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,7 +24,7 @@ public abstract class Person extends AbstractEntity {
     private LocalDate birthDate;
     private String subjectOfRF;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     private List<String> contacts;
 
     public Person(List<String> contacts) {

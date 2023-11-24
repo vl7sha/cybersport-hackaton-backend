@@ -3,7 +3,7 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams;
 import lombok.Getter;
 import lombok.Setter;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Players.PlayerDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentResultDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentResultShortDTO;
 
 import java.util.List;
 
@@ -17,6 +17,6 @@ public class TeamAccountResponseDTO {
 
     private List<PlayerDTO> players;
 
-    private List<TournamentResultDTO> results;
+    private List<TournamentResultShortDTO> results;
 
 }

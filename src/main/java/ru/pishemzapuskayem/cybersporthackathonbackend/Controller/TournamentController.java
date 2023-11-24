@@ -9,9 +9,11 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateTournamentReques
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Matches.MatchDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Pagination.PageDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.EndMatchRequestDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentShortDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.MatchMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.TournamentMapper;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
 import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentRequestService;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TournamentService;
@@ -26,8 +28,14 @@ public class TournamentController {
     private final MatchMapper matchMapper;
     private final TournamentRequestService tournamentRequestService;
 
+
+    @GetMapping("/{tournamentId}")
+    public ResponseEntity<TournamentDTO> getTournament(@PathVariable Long tournamentId) {
+        Tournament tournament = tournamentService.findById(tournamentId);
+        return ResponseEntity.ok(tournamentMapper.mapLong(tournament));
+    }
+
     @GetMapping("/{tournamentId}/current-stage/matches")
-    @PreAuthorize("hasRole('JUDGE')")
     public ResponseEntity<PageDTO<MatchDTO>> getCurrentStageMatches(@PathVariable Long tournamentId, XPage page) {
         Page<MatchDTO> dtos = tournamentService.findCurrentStageMatches(tournamentId, page)
                 .map(matchMapper::map);
@@ -41,7 +49,6 @@ public class TournamentController {
     }
 
     @GetMapping
-    @PreAuthorize("hasRole('JUDGE')")
     public ResponseEntity<PageDTO<TournamentShortDTO>> getTournaments(XPage page) {
         Page<TournamentShortDTO> dtos = tournamentService.findAllTournaments(page)
                 .map(tournamentMapper::map);
