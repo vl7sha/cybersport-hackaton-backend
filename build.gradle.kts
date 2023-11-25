@@ -33,6 +33,10 @@ dependencies {
     implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.2.0")
     implementation ("org.springframework.boot:spring-boot-starter-mail:3.0.5")
     implementation ("org.modelmapper:modelmapper:3.1.1")
+    // https://mvnrepository.com/artifact/org.jxls/jxls
+    implementation("org.jxls:jxls:2.13.0")
+    // https://mvnrepository.com/artifact/org.jxls/jxls-poi
+    implementation("org.jxls:jxls-poi:2.13.0")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
