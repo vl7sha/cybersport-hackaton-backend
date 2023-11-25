@@ -54,6 +54,9 @@ public class ExportService {
     private void secondSheet(Context context, Judge chiefJudge, Judge chiefSecretary,
                              List<Judge> judges, List<Judge> secretaries) {
 
+        String[] columns = {
+                "№", "ID", "Ф.И.О.", "Пол", "Дата рожд.", "Субъект РФ", "Команда", "Разряд", "Количество побед", "Занятое место", "Контакты", "ГТО"
+        };
         List<Object[]> newJudges = new ArrayList<>();
 
         if (chiefJudge != null) {
@@ -134,7 +137,7 @@ public class ExportService {
                         }
                 );
             }
-
+            context.putVar("cell", columns);
             context.putVar("data", newJudges);
         }
 
