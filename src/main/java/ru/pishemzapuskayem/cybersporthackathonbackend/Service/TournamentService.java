@@ -9,6 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Export.ExportService;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Judge;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Match;
@@ -19,6 +20,7 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.JudgeRepository
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +36,7 @@ public class TournamentService {
     private final JudgeRepository judgeRepository;
     private final TournamentStageService tournamentStageService;
     private final TournamentResultService tournamentResultService;
+    private final ExportService exportService;
 
     public Page<Tournament> findAllTournaments(XPage page) {
         Pageable pageable = PageRequest.of(page.getPage(), page.getItemsPerPage());
@@ -339,6 +342,19 @@ public class TournamentService {
 
         tournament.getSecretaries().remove(secretary);
         tournamentRepository.save(tournament);
+    }
+
+    public void exportFileExcel(Long tournamentId) {
+
+        Tournament tournament = tournamentRepository.findById(tournamentId)
+                .orElseThrow(() -> new ApiException("Турнир не найден"));
+
+
+        try {
+            exportService.export(tournament);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private Judge getAuthenticated() {

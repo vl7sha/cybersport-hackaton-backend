@@ -152,4 +152,13 @@ public class TournamentController {
 
         return ResponseEntity.ok().build();
     }
+
+
+    @PostMapping("/{tournamentId}/export")
+    @PreAuthorize("hasRole('JUDGE') or hasRole('ADMIN')")
+    public ResponseEntity<Void> exportFileExcel(@PathVariable Long tournamentId){
+        tournamentService.exportFileExcel(tournamentId);
+
+        return ResponseEntity.ok().build();
+    }
 }
