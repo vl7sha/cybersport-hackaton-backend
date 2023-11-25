@@ -34,7 +34,6 @@ public class TeamService {
 
     @Value("${urls.frontend.join-team-page}")
     private String frontendJoinTeamPageUrl;
-    private final TournamentRepository tournamentRepository;
     private final TournamentResultRepository tournamentResultRepository;
 
     @Transactional
@@ -118,5 +117,15 @@ public class TeamService {
         });
 
         return teams;
+    }
+
+    public Team getTeamById(Long teamId) {
+        Team team = teamRepository.findById(teamId)
+                .orElseThrow(() -> new ApiException("Команда не найдена"));
+
+        Hibernate.initialize(team.getPlayers());
+        Hibernate.initialize(team.getResults());
+
+        return team;
     }
 }

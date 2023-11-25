@@ -37,6 +37,12 @@ public class TeamController {
         );
     }
 
+    @GetMapping("/{teamId}")
+    public ResponseEntity<TeamDTO> getTeamById(@PathVariable Long teamId) {
+        Team team = teamService.getTeamById(teamId);
+        return ResponseEntity.ok(teamMapper.map(team));
+    }
+
     @PostMapping
     @PreAuthorize("hasRole('CAPTAIN') or hasRole('PLAYER')")
     public ResponseEntity<GeneratedTeamJoinLinkResponseDTO> createTeam(@RequestBody CreateTeamRequestDTO requestCreateTeamDTO) {
@@ -65,11 +71,11 @@ public class TeamController {
     }
 
 
-    @GetMapping("/{teamId}")
-    public ResponseEntity<TeamAccountResponseDTO> teamAccount(@PathVariable Long teamId){
-        TeamAccountResponseDTO team = teamMapper.map(
-                teamService.getTeamAccount(teamId)
-        );
-        return ResponseEntity.ok(team);
-    }
+//    @GetMapping("/{teamId}")
+//    public ResponseEntity<TeamAccountResponseDTO> teamAccount(@PathVariable Long teamId){
+//        TeamAccountResponseDTO team = teamMapper.map(
+//                teamService.getTeamAccount(teamId)
+//        );
+//        return ResponseEntity.ok(team);
+//    }
 }
