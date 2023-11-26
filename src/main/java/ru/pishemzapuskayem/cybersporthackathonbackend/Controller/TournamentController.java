@@ -68,6 +68,13 @@ public class TournamentController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/create")
+    @PreAuthorize("hasRole('JUDGE')")
+    public ResponseEntity<Void> createPassedTournament(@RequestBody CreateTournamentRequest createTournamentRequest) {
+        tournamentService.create(tournamentMapper.map(createTournamentRequest));
+        return ResponseEntity.ok().build();
+    }
+
     @PostMapping("/{tournamentId}/send-request")
     @PreAuthorize("hasRole('CAPTAIN')")
     public ResponseEntity<Void> sendRequest(@PathVariable Long tournamentId, @RequestParam Long teamId) {

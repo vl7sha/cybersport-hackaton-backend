@@ -29,11 +29,13 @@ public class TournamentResultService {
 
         if (result != null) {
             result.setScore(score);
+            result.setAllStagesScore(result.getAllStagesScore() + score);
         } else {
             result = new TournamentResult();
             result.setTournament(tournament);
             result.setTeam(team);
             result.setScore(score);
+            result.setAllStagesScore(score);
             result.setTakenPlace(null);
 
             if (tournament.getResults() == null) {
