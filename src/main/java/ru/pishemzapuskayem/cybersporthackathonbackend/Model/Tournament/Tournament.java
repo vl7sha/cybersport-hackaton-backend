@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.AbstractEntity;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Judge;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.MvpPlayer;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 
 import java.time.LocalDate;
@@ -52,4 +53,7 @@ public class Tournament extends AbstractEntity {
 
     @ManyToMany
     private List<Judge> secretaries;
+
+    @OneToOne
+    private MvpPlayer mvpPlayer;
 }

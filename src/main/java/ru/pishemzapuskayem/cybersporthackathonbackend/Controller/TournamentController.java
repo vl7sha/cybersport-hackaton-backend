@@ -25,7 +25,6 @@ public class TournamentController {
     private final MatchMapper matchMapper;
     private final TournamentRequestService tournamentRequestService;
 
-
     @GetMapping("/{tournamentId}")
     public ResponseEntity<TournamentDTO> getTournament(@PathVariable Long tournamentId) {
         Tournament tournament = tournamentService.findById(tournamentId);
