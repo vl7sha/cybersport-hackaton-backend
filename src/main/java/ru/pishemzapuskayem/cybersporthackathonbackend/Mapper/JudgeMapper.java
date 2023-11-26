@@ -16,6 +16,12 @@ public class JudgeMapper {
         return modelMapper.map(createJudgeRequestDTO, Judge.class);
     }
 
+    public Judge map(Long id) {
+        Judge judge = new Judge();
+        judge.setId(id);
+        return judge;
+    }
+
     public JudgeDTO map(Judge judge) {
         return modelMapper.map(judge, JudgeDTO.class);
     }

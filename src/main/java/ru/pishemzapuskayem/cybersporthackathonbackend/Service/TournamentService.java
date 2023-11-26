@@ -11,10 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Judge;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Match;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentStage;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentStageTeam;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.*;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.JudgeRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
@@ -263,6 +260,7 @@ public class TournamentService {
         tournamentRepository.save(tournament);
     }
 
+    @Transactional
     public void addSecretary(Long tournamentId, Long secretariesId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new ApiException("Турнир не найден"));
@@ -282,6 +280,7 @@ public class TournamentService {
         tournamentRepository.save(tournament);
     }
 
+    @Transactional
     public void addChiefSecretary(Long tournamentId, Long secretariesId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new ApiException("Турнир не найден"));
@@ -301,6 +300,7 @@ public class TournamentService {
         tournamentRepository.save(tournament);
     }
 
+    @Transactional
     public void updateChiefSecretary(Long tournamentId, Long secretariesId){
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new ApiException("Турнир не найден"));
@@ -322,6 +322,7 @@ public class TournamentService {
         tournamentRepository.save(tournament);
     }
 
+    @Transactional
     public void removeSecretary(Long tournamentId, Long secretaryId) {
         Tournament tournament = tournamentRepository.findById(tournamentId)
                 .orElseThrow(() -> new ApiException("Турнир не найден"));
@@ -339,6 +340,64 @@ public class TournamentService {
 
         tournament.getSecretaries().remove(secretary);
         tournamentRepository.save(tournament);
+    }
+
+    @Transactional
+    public Tournament save(Tournament tournament) {
+
+        if (tournament.getChiefJudge() != null && tournament.getChiefJudge().getId() != null) {
+            Judge chiefJudge = judgeRepository.findById(tournament.getChiefJudge().getId())
+                    .orElseThrow(() -> new ApiException("Главный судья не найден"));
+            tournament.setChiefJudge(chiefJudge);
+        }
+
+        if (tournament.getChiefSecretary() != null && tournament.getChiefSecretary().getId() != null) {
+            Judge chiefSecretary = judgeRepository.findById(tournament.getChiefSecretary().getId())
+                    .orElseThrow(() -> new ApiException("Главный секретарь не найден"));
+            tournament.setChiefSecretary(chiefSecretary);
+        }
+
+        if (tournament.getJudges() != null) {
+            List<Judge> judges = tournament.getJudges().stream().map(
+                    judge -> judgeRepository.findById(judge.getId())
+                            .orElseThrow(() -> new ApiException("Судья не найден"))
+            ).toList();
+
+            tournament.setJudges(judges);
+        }
+
+        if (tournament.getSecretaries() != null) {
+            List<Judge> secretaries = tournament.getSecretaries().stream().map(
+                    judge -> judgeRepository.findById(judge.getId())
+                            .orElseThrow(() -> new ApiException("Секретарь не найден"))
+            ).toList();
+
+            tournament.setSecretaries(secretaries);
+        }
+
+        // Сохранение этапов турнира и связанных с ними матчей
+        if (tournament.getStages() != null) {
+            List<TournamentStage> tournamentStages = tournament.getStages()
+                    .stream()
+                    .map(tournamentStageService::save)
+                    .toList();
+
+            tournament.setStages(tournamentStages);
+            tournamentStages.forEach(t -> t.setTournament(tournament));
+        }
+
+        // Сохранение результатов турнира
+        if (tournament.getResults() != null) {
+            List<TournamentResult> tournamentResults = tournament.getResults()
+                    .stream()
+                    .map(tournamentResultService::save)
+                    .toList();
+
+            tournament.setResults(tournamentResults);
+            tournamentResults.forEach(t -> t.setTournament(tournament));
+        }
+
+        return tournamentRepository.save(tournament);
     }
 
     private Judge getAuthenticated() {

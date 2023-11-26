@@ -27,6 +27,8 @@ public class TournamentStageService {
 
     private final TournamentStageRepository repository;
     private final MatchRepository matchRepository;
+    private final MatchService matchService;
+    private final TournamentStageRepository tournamentStageRepository;
     private final TournamentStageTeamRepository stageTeamRepository;
 
     public Page<Match> findCurrentStageMatches(TournamentStage currentStage, XPage page) {
@@ -71,6 +73,19 @@ public class TournamentStageService {
 
         matchRepository.saveAll(toSave);
         repository.save(stage);
+    }
+
+    @Transactional
+    public TournamentStage save(TournamentStage stage) {
+        //todo команды участвующие в этапе
+        if (stage.getMatches() != null) {
+            stage.getMatches().forEach(match -> {
+                Match m = matchService.save(match);
+                m.setTournamentStage(stage);
+            });
+        }
+
+        return tournamentStageRepository.save(stage);
     }
 
     private Match createByeMatch(Team luckyBastards, TournamentStage stage) {
