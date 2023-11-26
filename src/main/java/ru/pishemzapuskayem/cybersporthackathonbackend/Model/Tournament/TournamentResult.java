@@ -24,5 +24,7 @@ public class TournamentResult extends AbstractEntity {
     //нужен для подсчёта занятого места внутри этапа (если команда не прошла дальше) это кишки
     private Integer score;
 
+    private Integer allStagesScore;
+
     private Integer takenPlace;
 }
