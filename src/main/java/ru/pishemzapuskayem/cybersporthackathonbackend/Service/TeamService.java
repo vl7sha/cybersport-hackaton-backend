@@ -128,7 +128,7 @@ public class TeamService {
     }
 
 
-    public Map.Entry<Team, Integer> teamsRankingByDiscipline(String discipline){
+    public List<Team> teamsRankingByDiscipline(String discipline){
         List<Tournament> tournaments = tournamentService.tournamentListByDiscipline(discipline);
 
         Map<Team, Integer> ranking = new HashMap<>();
@@ -140,5 +140,13 @@ public class TeamService {
                 ranking.put(result.getTeam(), result.getAllStagesScore());
             }
         }
-    }
+
+        List<Team> sortedKeys = new ArrayList<>(ranking.keySet());
+        sortedKeys.sort(Comparator.comparing(ranking::get));
+
+        return  sortedKeys;
+    };
+
+
+
 }

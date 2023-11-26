@@ -73,7 +73,7 @@ public class TeamController {
 
     @PostMapping("/{discipline/ranking}")
     public ResponseEntity<List<TeamShortDTO>> disciplineRanking(@PathVariable String discipline){
-        TeamShortDTO teamShortDTO = teamMapper.map(teamService.teamsRankingByDiscipline(discipline));
+        List<TeamShortDTO> teamShortDTO = teamMapper.map(teamService.teamsRankingByDiscipline(discipline));
 
         return ResponseEntity.ok(teamShortDTO);
     }

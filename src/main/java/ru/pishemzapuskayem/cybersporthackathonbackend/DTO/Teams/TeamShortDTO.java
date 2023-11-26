@@ -9,7 +9,4 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamDTO;
 public class TeamShortDTO {
 
     private TeamDTO team;
-
-    private Integer score;
-
 }
