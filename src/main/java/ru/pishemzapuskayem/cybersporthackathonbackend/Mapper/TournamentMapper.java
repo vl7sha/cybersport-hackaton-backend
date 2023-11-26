@@ -3,16 +3,19 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.Mapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateTournamentRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.*;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Judge.JudgeDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentResultShortDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentShortDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentStageDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.Stages.CompletedMatchDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.Stages.CompletedStageDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Judge;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Match;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentResult;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentStage;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Component
 @RequiredArgsConstructor
@@ -80,5 +83,69 @@ public class TournamentMapper {
 
 
         return dto;
+    }
+
+    public Tournament mapCompletedTournament(CompletedTournamentDTO completedTournamentDTO) {
+        Tournament tournament = modelMapper.map(completedTournamentDTO, Tournament.class);
+        tournament.setIsStarted(true);
+
+        for (CompletedStageDTO stageDTO : completedTournamentDTO.getStages()) {
+            TournamentStage stage = stageMapper.map(stageDTO);
+            stage.setTournament(tournament);
+
+            for (CompletedMatchDTO matchDTO : stageDTO.getMatches()) {
+                Match match = new Match();
+                match.setTeam1(teamMapper.map(matchDTO.getTeam1Id()));
+                match.setTeam2(teamMapper.map(matchDTO.getTeam2Id()));
+                match.setWinnerTeam(teamMapper.map(matchDTO.getWinnerTeamId()));
+                match.setTournamentStage(stage);
+                stage.getMatches().add(match);
+            }
+
+            tournament.getStages().add(stage);
+        }
+
+        if (completedTournamentDTO.getChiefJudgeId() != null) {
+            Judge chiefJudge = judgeMapper.map(completedTournamentDTO.getChiefJudgeId());
+            tournament.setChiefJudge(chiefJudge);
+        }
+
+        if (completedTournamentDTO.getChiefSecretaryId() != null) {
+            Judge chiefSecretary = judgeMapper.map(completedTournamentDTO.getChiefSecretaryId());
+            tournament.setChiefSecretary(chiefSecretary);
+        }
+
+        if (completedTournamentDTO.getJudgeIds() != null) {
+            List<Judge> judges = completedTournamentDTO.getJudgeIds().stream()
+                    .map(judgeMapper::map)
+                    .collect(Collectors.toList());
+            tournament.setJudges(judges);
+        }
+
+        if (completedTournamentDTO.getSecretaryIds() != null) {
+            List<Judge> secretaries = completedTournamentDTO.getSecretaryIds().stream()
+                    .map(judgeMapper::map)
+                    .collect(Collectors.toList());
+            tournament.setSecretaries(secretaries);
+        }
+
+        if (completedTournamentDTO.getResults() != null) {
+            List<TournamentResult> results = completedTournamentDTO.getResults().stream()
+                    .map(this::mapResultDTOToTournamentResult)
+                    .collect(Collectors.toList());
+            results.forEach(result -> result.setTournament(tournament));
+            tournament.setResults(results);
+        }
+
+
+        return tournament;
+    }
+
+    private TournamentResult mapResultDTOToTournamentResult(CompletedTournamentResultDTO resultDTO) {
+        TournamentResult result = new TournamentResult();
+        result.setTeam(teamMapper.map(resultDTO.getTeamId()));
+        result.setAllStagesScore(resultDTO.getAllStagesScore());
+        result.setTakenPlace(resultDTO.getTakenPlace());
+        return result;
     }
 }
