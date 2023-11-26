@@ -342,6 +342,12 @@ public class TournamentService {
         tournamentRepository.save(tournament);
     }
 
+  
+    public List<Tournament> tournamentListByDiscipline(String discipline){
+        return tournamentRepository.findTournamentsByDiscipline(discipline).orElseThrow(
+                () -> new ApiException("По такой дисциплине не было турниров")
+        );
+
     @Transactional
     public Tournament save(Tournament tournament) {
 
@@ -398,6 +404,7 @@ public class TournamentService {
         }
 
         return tournamentRepository.save(tournament);
+
     }
 
     private Judge getAuthenticated() {
