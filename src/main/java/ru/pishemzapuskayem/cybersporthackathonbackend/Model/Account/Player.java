@@ -21,4 +21,7 @@ public class Player extends Account {
 
     @ManyToOne
     private Team team;
+
+    @OneToOne
+    private MvpPlayer mpv;
 }
