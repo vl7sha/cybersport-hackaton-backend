@@ -46,7 +46,7 @@ public class TeamMapper {
         return teamAccountResponseDTO;
     }
 
-    public List<TeamShortDTO> map(List<Team> teams) {
+    public List<TeamShortDTO> mapShort(List<Team> teams) {
 
         List<TeamShortDTO> teamShortDTOS = new ArrayList<>();
 
