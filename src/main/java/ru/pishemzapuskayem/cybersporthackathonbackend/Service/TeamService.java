@@ -9,20 +9,17 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.CreateTeamRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Account.Player;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentResult;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.PlayerRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TeamRepository;
-import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentResultRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -31,6 +28,7 @@ public class TeamService {
     private final TeamRepository teamRepository;
     private final PlayerRepository playerRepository;
     private final RoleService roleService;
+    private final TournamentService tournamentService;
 
     @Value("${urls.frontend.join-team-page}")
     private String frontendJoinTeamPageUrl;
@@ -127,5 +125,20 @@ public class TeamService {
         Hibernate.initialize(team.getResults());
 
         return team;
+    }
+
+
+    public Map.Entry<Team, Integer> teamsRankingByDiscipline(String discipline){
+        List<Tournament> tournaments = tournamentService.tournamentListByDiscipline(discipline);
+
+        Map<Team, Integer> ranking = new HashMap<>();
+        for (var tournament: tournaments ){
+            for (var result: tournament.getResults()){
+                if (ranking.containsKey(result.getTeam())){
+                    ranking.replace(result.getTeam(), result.getAllStagesScore() + ranking.get(result.getTeam()));
+                }
+                ranking.put(result.getTeam(), result.getAllStagesScore());
+            }
+        }
     }
 }

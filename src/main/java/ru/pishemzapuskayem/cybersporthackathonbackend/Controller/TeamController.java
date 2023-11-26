@@ -5,16 +5,17 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Matches.MatchDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Pagination.PageDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamShortDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.CreateTeamRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.GeneratedTeamJoinLinkResponseDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamAccountResponseDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.TeamMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.SearchCriteria.XPage;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Service.TeamService;
+
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -70,6 +71,12 @@ public class TeamController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/{discipline/ranking}")
+    public ResponseEntity<List<TeamShortDTO>> disciplineRanking(@PathVariable String discipline){
+        TeamShortDTO teamShortDTO = teamMapper.map(teamService.teamsRankingByDiscipline(discipline));
+
+        return ResponseEntity.ok(teamShortDTO);
+    }
 
 //    @GetMapping("/{teamId}")
 //    public ResponseEntity<TeamAccountResponseDTO> teamAccount(@PathVariable Long teamId){

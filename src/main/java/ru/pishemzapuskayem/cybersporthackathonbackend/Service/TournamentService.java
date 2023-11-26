@@ -341,6 +341,12 @@ public class TournamentService {
         tournamentRepository.save(tournament);
     }
 
+    public List<Tournament> tournamentListByDiscipline(String discipline){
+        return tournamentRepository.findTournamentsByDiscipline(discipline).orElseThrow(
+                () -> new ApiException("По такой дисциплине не было турниров")
+        );
+    }
+
     private Judge getAuthenticated() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         return judgeRepository.findByEmail(email)
