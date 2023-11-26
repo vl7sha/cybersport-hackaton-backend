@@ -5,12 +5,9 @@ import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.CreateTournamentRequest;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.*;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Matches.MatchDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Pagination.PageDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.EndMatchRequestDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentDTO;
-import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Tournament.TournamentShortDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.MatchMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Mapper.TournamentMapper;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
@@ -68,10 +65,11 @@ public class TournamentController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping("/create")
+    @PostMapping("/save")
     @PreAuthorize("hasRole('JUDGE')")
-    public ResponseEntity<Void> createPassedTournament(@RequestBody CreateTournamentRequest createTournamentRequest) {
-        tournamentService.create(tournamentMapper.map(createTournamentRequest));
+    public ResponseEntity<Void> addCompletedTournament(@RequestBody CompletedTournamentDTO completedTournamentDTO) {
+        Tournament completedTournament = tournamentMapper.mapCompletedTournament(completedTournamentDTO);
+        tournamentService.save(completedTournament);
         return ResponseEntity.ok().build();
     }
 

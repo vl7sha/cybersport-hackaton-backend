@@ -12,7 +12,6 @@ import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 @Setter
 @Entity
 public class TournamentResult extends AbstractEntity {
-    //todo результат наверное связан должен быть не с турниром а с этапом турнира хз
     @ManyToOne
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;

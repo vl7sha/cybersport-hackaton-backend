@@ -3,9 +3,11 @@ package ru.pishemzapuskayem.cybersporthackathonbackend.Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Exceptions.ApiException;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.Tournament;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentResult;
+import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TeamRepository;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Repository.TournamentResultRepository;
 
 import java.util.ArrayList;
@@ -20,6 +22,7 @@ import java.util.stream.Collectors;
 @Transactional(readOnly = true)
 public class TournamentResultService {
     private final TournamentResultRepository resultRepository;
+    private final TeamRepository teamRepository;
 
     @Transactional
     public void saveOrUpdateStageResult(Tournament tournament, Team team, int score) {
@@ -70,6 +73,17 @@ public class TournamentResultService {
         }
 
         tournament.setLastTakenPlace(lastTakenPlace);
+    }
+
+    @Transactional
+    public TournamentResult save(TournamentResult result) {
+        if (result.getTeam() != null && result.getTeam().getId() != null) {
+            Team team = teamRepository.findById(result.getTeam().getId())
+                    .orElseThrow(() -> new ApiException("Команда не найдена"));
+            result.setTeam(team);
+        }
+
+        return resultRepository.save(result);
     }
 
     private List<Team> sortByRating(List<Team> teams, Map<Team, TournamentResult> resultsMap) {

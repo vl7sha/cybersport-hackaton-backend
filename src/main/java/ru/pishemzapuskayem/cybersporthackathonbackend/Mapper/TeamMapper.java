@@ -25,6 +25,12 @@ public class TeamMapper {
         return team;
     }
 
+    public Team map(Long teamId) {
+        Team team = new Team();
+        team.setId(teamId);
+        return team;
+    }
+
     public TeamDTO map(Team team) {
         TeamDTO dto = modelMapper.map(team, TeamDTO.class);
         dto.setCaptain(playerMapper.map(team.getCaptain()));
