@@ -6,10 +6,13 @@ import org.springframework.stereotype.Component;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.CreateTeamRequestDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamAccountResponseDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamDTO;
+import ru.pishemzapuskayem.cybersporthackathonbackend.DTO.Teams.TeamShortDTO;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Team;
 import ru.pishemzapuskayem.cybersporthackathonbackend.Model.Tournament.TournamentResult;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -38,7 +41,7 @@ public class TeamMapper {
         return dto;
     }
 
-    public TeamAccountResponseDTO map(List<TournamentResult> tournamentResult){
+    public TeamAccountResponseDTO map(List<TournamentResult> tournamentResult) {
         TeamAccountResponseDTO teamAccountResponseDTO = modelMapper.map(tournamentResult.get(0).getTeam(),
                 TeamAccountResponseDTO.class);
 
@@ -47,5 +50,20 @@ public class TeamMapper {
         );
 
         return teamAccountResponseDTO;
+    }
+
+    public List<TeamShortDTO> mapShort(List<Team> teams) {
+
+        List<TeamShortDTO> teamShortDTOS = new ArrayList<>();
+
+        for (Team team:
+             teams) {
+            TeamShortDTO teamShortDTO = new TeamShortDTO();
+
+            teamShortDTO.setTeam(map(team));
+        }
+
+        return  teamShortDTOS;
+
     }
 }
