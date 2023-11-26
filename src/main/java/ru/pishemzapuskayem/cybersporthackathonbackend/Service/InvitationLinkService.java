@@ -94,7 +94,7 @@ public class InvitationLinkService {
     }
 
     private boolean isUsable(InvitationLink link) {
-        return !link.isUsed() && link.getExpiryDate().isBefore(LocalDate.now());
+        return !link.isUsed();// && link.getExpiryDate().isBefore(LocalDate.now())
     }
 
     private String buildRegistrationInviteLink(String token) {
